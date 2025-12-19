@@ -1205,11 +1205,6 @@
 				kind = branch;
 			};
 		};
-			isa = XCRemoteSwiftPackageReference;
-			requirement = {
-				kind = revision;
-				revision = f6c1574ad6f747e1110b544c35e6ec64ed6f52f1;
-			};
 		};
 		E1D7EF972E35E16C00640029 /* XCRemoteSwiftPackageReference "mediaremote-adapter" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1227,11 +1222,6 @@
 				minimumVersion = 2.1.2;
 			};
 		};
-			isa = XCRemoteSwiftPackageReference;
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
@@ -1255,8 +1245,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E1ADD4582CC5352A00303ECB /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
 			productName = LaunchAtLogin;
-		};
-			isa = XCSwiftPackageProductDependency;
 		};
 		E1D7EF982E35E16C00640029 /* MediaRemoteAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
