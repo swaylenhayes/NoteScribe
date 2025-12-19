@@ -5,3 +5,7 @@ NoteScribe.xcodeproj/*.backup*
 NoteScribe.xcodeproj/project.pbxproj.backup*
 NoteScribe.xcodeproj/xcuserdata/
 **/*.xcuserstate
+nvidia_parakeet-v2-L/
+nvidia_parakeet-v3-L/
+NoteScribe/Resources/BundledModels/Parakeet/nvidia_parakeet-v2-L/
+NoteScribe/Resources/BundledModels/Parakeet/nvidia_parakeet-v3-L/
