@@ -1,6 +1,6 @@
 # NoteScribe (fork of LowKeet)
 
-Minimal macOS transcription app using Parakeet V3 only. This directory is a clean fork of LowKeet, trimmed to the NoteScribe feature set and rebranded so it can live in its own repository.
+Minimal macOS transcription app using Parakeet V2 only. This directory is a clean fork of LowKeet, trimmed to the NoteScribe feature set and rebranded so it can live in its own repository.
 
 ## Build
 - Open `NoteScribe/NoteScribe.xcodeproj`.
@@ -8,7 +8,7 @@ Minimal macOS transcription app using Parakeet V3 only. This directory is a clea
 - The app stores data under `~/Library/Application Support/com.swaylenhayes.apps.notescribe`.
 
 ## Differences vs. LowKeet
-- Only Parakeet V3 transcription (no Whisper, no legacy local-model UI).
+- Only Parakeet V2 transcription (no Whisper, no legacy local-model UI).
 - Tabbed navigation with a scratchpad home, file transcription, history, replacements, and settings.
 - Menu bar–only experience; enhancement/online features removed.
 - Branding, bundle ID, and update feed changed to NoteScribe.

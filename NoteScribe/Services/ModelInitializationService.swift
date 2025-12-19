@@ -36,9 +36,9 @@ class ModelInitializationService {
             return
         }
 
-        logger.info("First launch detected - initializing Parakeet V3 model...")
+        logger.info("First launch detected - initializing Parakeet V2 model...")
 
-        // Copy Parakeet V3 model only (if bundled)
+        // Copy Parakeet V2 model only (if bundled)
         try await copyParakeetModels()
         try await copyVADModel()
 
@@ -47,7 +47,7 @@ class ModelInitializationService {
         logger.info("Model initialization complete")
     }
 
-    // MARK: - Parakeet V3 Model
+    // MARK: - Parakeet V2 Model
 
     private func copyParakeetModels() async throws {
         guard let resourcesDir = bundledResourcesDirectory else {
@@ -58,8 +58,8 @@ class ModelInitializationService {
         // Create FluidAudio models directory if needed
         try fileManager.createDirectory(at: fluidAudioDirectory, withIntermediateDirectories: true)
 
-        // Parakeet V3 (CoreML)
-        let modelName = "parakeet-tdt-0.6b-v3-coreml"
+        // Parakeet V2 (CoreML)
+        let modelName = "parakeet-tdt-0.6b-v2-coreml"
         // Folder references in Xcode land the bundle at Resources/<lastPathComponent>,
         // so prefer the simple folder name and fall back to the legacy nested path.
         let candidatePaths = [
@@ -69,8 +69,8 @@ class ModelInitializationService {
         guard let sourceURL = candidatePaths
             .map({ resourcesDir.appendingPathComponent($0) })
             .first(where: { fileManager.fileExists(atPath: $0.path) }) else {
-            logger.error("Parakeet V3 model not found in bundle")
-            throw ModelInitializationError.bundleNotFound
+            logger.info("Parakeet V2 model not bundled; will rely on FluidAudio download.")
+            return
         }
 
         let destinationURL = fluidAudioDirectory.appendingPathComponent(modelName)
@@ -79,17 +79,17 @@ class ModelInitializationService {
         if fileManager.fileExists(atPath: destinationURL.path) {
             let preprocessorPath = destinationURL.appendingPathComponent("Preprocessor.mlmodelc").path
             if fileManager.fileExists(atPath: preprocessorPath) {
-                logger.info("Parakeet V3 model already exists")
+                logger.info("Parakeet V2 model already exists")
                 return
             } else {
-                logger.warning("Parakeet V3 model cache incomplete; recreating from bundle")
+                logger.warning("Parakeet V2 model cache incomplete; recreating from bundle")
                 try fileManager.removeItem(at: destinationURL)
             }
         }
 
-        logger.info("Copying Parakeet V3 model...")
+        logger.info("Copying Parakeet V2 model...")
         try fileManager.copyItem(at: sourceURL, to: destinationURL)
-        logger.info("Parakeet V3 model copied successfully")
+        logger.info("Parakeet V2 model copied successfully")
     }
 
     // MARK: - VAD Model
