@@ -3,3 +3,5 @@ DerivedData/
 *.xcresult
 NoteScribe.xcodeproj/*.backup*
 NoteScribe.xcodeproj/project.pbxproj.backup*
+NoteScribe.xcodeproj/xcuserdata/
+**/*.xcuserstate

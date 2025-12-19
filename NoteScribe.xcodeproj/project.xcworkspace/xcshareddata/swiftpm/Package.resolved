@@ -2,15 +2,6 @@
   "originHash": "68c6bbd63615f04525ad9542bc830268c503585e0c9665a0fdc061c8f5b62404",
   "pins": [
     {
-      "identity": "axswift",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/clavierorg/AXSwift.git",
-      "state": {
-        "revision": "2efa201fa18184de98674165592fd1ecb0c00a6d",
-        "version": "0.3.5"
-      }
-    },
-    {
       "identity": "fluidaudio",
       "kind": "remoteSourceControl",
       "location": "https://github.com/FluidInference/FluidAudio",
@@ -79,6 +70,15 @@
       "state": {
         "revision": "67fa55813b9e7b3b9acee9c0ae501def28746d76",
         "version": "2.1.2"
+      }
+    },
+    {
+      "identity": "axorcist",
+      "kind": "remoteSourceControl",
+      "location": "https://github.com/steipete/AXorcist",
+      "state": {
+        "branch": "main",
+        "revision": "c596eddb9ec6ce0c09522cd4d0c5595aa2f3e683"
       }
     }
   ],
