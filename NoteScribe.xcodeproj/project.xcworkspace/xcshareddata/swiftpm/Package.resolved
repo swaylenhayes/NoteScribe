@@ -47,14 +47,6 @@
       }
     },
     {
-      "identity": "selectedtextkit",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/tisfeng/SelectedTextKit",
-      "state": {
-        "revision": "f6c1574ad6f747e1110b544c35e6ec64ed6f52f1"
-      }
-    },
-    {
       "identity": "swift-atomics",
       "kind": "remoteSourceControl",
       "location": "https://github.com/apple/swift-atomics.git",
@@ -70,15 +62,6 @@
       "state": {
         "revision": "67fa55813b9e7b3b9acee9c0ae501def28746d76",
         "version": "2.1.2"
-      }
-    },
-    {
-      "identity": "axorcist",
-      "kind": "remoteSourceControl",
-      "location": "https://github.com/steipete/AXorcist",
-      "state": {
-        "branch": "main",
-        "revision": "c596eddb9ec6ce0c09522cd4d0c5595aa2f3e683"
       }
     }
   ],
