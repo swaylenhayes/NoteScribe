@@ -82,8 +82,6 @@ whisper.cpp/
 # *.xcframework
 
 # Whisper models directory (wherever you store them)
-Models/
-models/
 Resources/Models/
 whisper-models/
 
