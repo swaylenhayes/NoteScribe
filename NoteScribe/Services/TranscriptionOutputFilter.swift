@@ -9,10 +9,8 @@ struct TranscriptionOutputFilter {
         #"\(.*?\)"#,     // ()
         #"\{.*?\}"#      // {}
     ]
-
     private static let fillerWords = [
-        "uh", "um", "uhm", "umm", "uhh", "uhhh", "ah", "eh",
-        "hmm", "hm", "mmm", "mm", "mh", "ha", "ehh"
+        "uh", "um", "uhm", "umm", "uhh", "uhhh", "ah", "hmm", "hm", "mmm", "mm"
     ]
     static func filter(_ text: String) -> String {
         var filteredText = text
