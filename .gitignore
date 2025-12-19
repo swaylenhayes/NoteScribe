@@ -1,0 +1,5 @@
+.DS_Store
+DerivedData/
+*.xcresult
+NoteScribe.xcodeproj/*.backup*
+NoteScribe.xcodeproj/project.pbxproj.backup*
