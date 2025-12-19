@@ -1178,7 +1178,7 @@
 			repositoryURL = "https://github.com/FluidInference/FluidAudio";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.80.0;
+				minimumVersion = 0.8.0;
 			};
 		};
 		E1342C1D2EB4844800CED8A2 /* XCRemoteSwiftPackageReference "swift-atomics" */ = {
@@ -1205,7 +1205,6 @@
 				kind = branch;
 			};
 		};
-		};
 		E1D7EF972E35E16C00640029 /* XCRemoteSwiftPackageReference "mediaremote-adapter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ejbills/mediaremote-adapter";
@@ -1221,7 +1220,6 @@
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.1.2;
 			};
-		};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
