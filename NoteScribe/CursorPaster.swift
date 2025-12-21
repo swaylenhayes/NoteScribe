@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import ApplicationServices
 
 class CursorPaster {
 
@@ -41,7 +42,10 @@ class CursorPaster {
     }
     
     private static func pasteUsingCommandV() {
-        guard AXIsProcessTrusted() else {
+        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
+        let isTrusted = AXIsProcessTrustedWithOptions(options)
+        if !isTrusted {
+            NSLog("CursorPaster: Accessibility permission not granted; auto-paste skipped.")
             return
         }
         

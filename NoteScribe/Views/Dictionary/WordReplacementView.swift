@@ -111,7 +111,7 @@ struct WordReplacementView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 } icon: {
                     Image(systemName: "info.circle.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.accentColor)
                 }
             }
             
@@ -158,7 +158,9 @@ struct WordReplacementView: View {
                         Button(action: { showAddReplacementModal = true }) {
                             Image(systemName: "plus")
                         }
-                        .buttonStyle(.borderless)
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.regular)
+                        .tint(Color(NSColor.controlAccentColor))
                     }
                     .frame(width: 60)
                 }
@@ -209,28 +211,9 @@ struct EmptyStateView: View {
     @Binding var showAddModal: Bool
     
     var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "text.word.spacing")
-                .font(.system(size: 32))
-                .foregroundColor(.secondary)
-            
-            Text("No Replacements")
-                .font(.headline)
-            
-            Text("Add word replacements to automatically replace text.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 250)
-            
-            Button("Add Replacement") {
-                showAddModal = true
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.regular)
-            .padding(.top, 8)
+        VStack {
+            Spacer()
         }
-        .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
