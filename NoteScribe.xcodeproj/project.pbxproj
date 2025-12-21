@@ -96,7 +96,6 @@
 		2752674F2EE2996E007CA86C /* RecorderComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752664A2EE2996E007CA86C /* RecorderComponents.swift */; };
 		275267502EE2996E007CA86C /* KeyboardShortcutsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266592EE2996E007CA86C /* KeyboardShortcutsListView.swift */; };
 		275267532EE2996E007CA86C /* AnimatedCopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266262EE2996E007CA86C /* AnimatedCopyButton.swift */; };
-		2785FDE92EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml in Resources */ = {isa = PBXBuildFile; fileRef = 2785FDE82EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml */; };
 		27F5661D2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml in Resources */ = {isa = PBXBuildFile; fileRef = 27F5661C2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml */; };
 		2BAA90C1C871A90588961825 /* DictionaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7AE540B935BEA0EDECE17F /* DictionaryItem.swift */; };
 		A500567D246E4AFAA32BA913 /* ModelInitializationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */; };
@@ -686,7 +685,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2785FDE92EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml in Resources */,
 				271BF9E22EF15D40009CAD43 /* silero-vad-coreml in Resources */,
 				27F5661D2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml in Resources */,
 				275266902EE2996E007CA86C /* recstop.mp3 in Resources */,
@@ -973,11 +971,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NoteScribe/NoteScribe.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 101;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LVKMA4S3V6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1021,11 +1019,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = NoteScribe/NoteScribe.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 101;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = LVKMA4S3V6;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -148,8 +148,8 @@ struct TranscriptionCard: View {
                         .font(.system(size: 14, weight: .medium, design: .default))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.1))
-                        .foregroundColor(.blue)
+                        .background(Color.accentColor.opacity(0.12))
+                        .foregroundColor(.accentColor)
                         .cornerRadius(6)
                 }
 

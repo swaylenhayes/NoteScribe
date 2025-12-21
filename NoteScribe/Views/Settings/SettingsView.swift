@@ -22,7 +22,6 @@ struct SettingsView: View {
     @AppStorage("enableAnnouncements") private var enableAnnouncements = true
     @AppStorage("IsVADEnabledLive") private var isVADEnabledLive = true
     @AppStorage("IsVADEnabledFile") private var isVADEnabledFile = true
-    @StateObject private var permissionManager = PermissionManager()
     @State private var showResetOnboardingAlert = false
     @State private var isCustomSoundsExpanded = false
 
@@ -83,42 +82,6 @@ struct SettingsView: View {
                     // Auto-update/announcements disabled for open source distribution
                 }
 
-                sectionBlock("Permissions") {
-                    permissionRow(
-                        title: "Microphone Access",
-                        status: permissionManager.audioPermissionStatus == .authorized,
-                        actionTitle: permissionManager.audioPermissionStatus == .notDetermined ? "Request" : "Open Settings"
-                    ) {
-                        if permissionManager.audioPermissionStatus == .notDetermined {
-                            permissionManager.requestAudioPermission()
-                        } else if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-
-                    permissionRow(
-                        title: "Accessibility Access",
-                        status: permissionManager.isAccessibilityEnabled,
-                        actionTitle: "Open Settings"
-                    ) {
-                        permissionManager.requestAccessibilityPermissions()
-                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-
-                    permissionRow(
-                        title: "Screen Recording",
-                        status: permissionManager.isScreenRecordingEnabled,
-                        actionTitle: "Request"
-                    ) {
-                        permissionManager.requestScreenRecordingPermission()
-                        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                }
-
                 sectionBlock("Import & Export") {
                     Text("Export your custom prompts, word replacements, shortcuts, and preferences to a backup file. API keys are not included.")
                         .font(.footnote)
@@ -158,8 +121,8 @@ struct SettingsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
         }
-        .onAppear {
-            permissionManager.checkAllPermissions()
+        .safeAreaInset(edge: .top) {
+            Color.clear.frame(height: 24)
         }
         .alert("Reset Onboarding", isPresented: $showResetOnboardingAlert) {
             Button("Cancel", role: .cancel) { }
@@ -213,19 +176,6 @@ struct SettingsView: View {
             Spacer()
             KeyboardShortcuts.Recorder(for: name)
                 .controlSize(.small)
-        }
-    }
-
-    private func permissionRow(title: String, status: Bool, actionTitle: String, action: @escaping () -> Void) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                Text(status ? "Granted" : "Not granted")
-                    .font(.footnote)
-                    .foregroundColor(status ? .accentColor : .secondary)
-            }
-            Spacer()
-            Button(actionTitle, action: action)
         }
     }
 
