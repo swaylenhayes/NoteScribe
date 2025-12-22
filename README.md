@@ -1,6 +1,6 @@
 # NoteScribe
 
-NoteScribe is a focused macOS voice transcription app for automatic speech recognition. It runs fully offline using Frontier Core ML audio models from [Fluid Inference](https://github.com/FluidInference/FluidAudio) (Nvidia Parakeet TDT [v2](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml) and [v3](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml)) bundled Parakeet TDT v2 and v3 model and is designed for fast dictation into any text field or for transcribing audio/video files.
+NoteScribe is a focused macOS voice transcription app for automatic speech recognition. It runs fully offline using Frontier Core ML audio models from [Fluid Inference](https://github.com/FluidInference/FluidAudio) (Nvidia Parakeet TDT [v2](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml) and [v3](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml)) and is designed for fast dictation into any text field or for transcribing audio/video files.
 
 There are two builds with identical features:
 
