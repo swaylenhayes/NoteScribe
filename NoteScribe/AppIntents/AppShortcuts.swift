@@ -5,28 +5,26 @@ struct AppShortcuts : AppShortcutsProvider {
     @AppShortcutsBuilder
     static var appShortcuts: [AppShortcut] {
             AppShortcut(
-                intent: ToggleMiniRecorderIntent(),
+                intent: StartStopRecordingIntent(),
                 phrases: [
-                    "Toggle \(.applicationName) recorder",
                     "Start \(.applicationName) recording",
                     "Stop \(.applicationName) recording",
-                    "Toggle recorder in \(.applicationName)",
+                    "Toggle recording in \(.applicationName)",
                     "Start recording in \(.applicationName)",
                     "Stop recording in \(.applicationName)"
                 ],
-                shortTitle: "Toggle Recorder",
+                shortTitle: "Start/Stop Recording",
                 systemImageName: "mic.circle"
             )
-            
+
             AppShortcut(
-                intent: DismissMiniRecorderIntent(),
+                intent: CancelRecordingIntent(),
                 phrases: [
-                    "Dismiss \(.applicationName) recorder",
                     "Cancel \(.applicationName) recording",
-                    "Close \(.applicationName) recorder",
-                    "Hide \(.applicationName) recorder"
+                    "Dismiss \(.applicationName) recording",
+                    "Stop and discard \(.applicationName) recording"
                 ],
-                shortTitle: "Dismiss Recorder",
+                shortTitle: "Cancel Recording",
                 systemImageName: "xmark.circle"
             )
     }

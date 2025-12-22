@@ -26,6 +26,10 @@ struct NoteScribeApp: App {
     init() {
         // Configure FluidAudio logging subsystem
         AppLogger.defaultSubsystem = "com.swaylenhayes.apps.notescribe.parakeet"
+        UserDefaults.standard.register(defaults: [
+            "preserveTranscriptInClipboard": true,
+            "isSystemMuteEnabled": true
+        ])
 
         // OFFLINE MODE: Removed PowerMode initialization
 
@@ -190,6 +194,8 @@ struct NoteScribeApp: App {
                             NSApplication.shared.terminate(nil)
                             return
                         }
+
+                        PermissionManager.requestInitialPermissions()
                         
                         // OFFLINE MODE: Removed announcements service and updater
 
@@ -227,6 +233,52 @@ struct NoteScribeApp: App {
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) { }
+            CommandMenu("Navigate") {
+                Button("NoteScribe") {
+                    NotificationCenter.default.post(
+                        name: .navigateToDestination,
+                        object: nil,
+                        userInfo: ["destination": "NoteScribe"]
+                    )
+                }
+                .keyboardShortcut("1", modifiers: [.command])
+
+                Button("File Transcription") {
+                    NotificationCenter.default.post(
+                        name: .navigateToDestination,
+                        object: nil,
+                        userInfo: ["destination": "Transcribe Audio"]
+                    )
+                }
+                .keyboardShortcut("2", modifiers: [.command])
+
+                Button("History") {
+                    NotificationCenter.default.post(
+                        name: .navigateToDestination,
+                        object: nil,
+                        userInfo: ["destination": "History"]
+                    )
+                }
+                .keyboardShortcut("3", modifiers: [.command])
+
+                Button("Replacements") {
+                    NotificationCenter.default.post(
+                        name: .navigateToDestination,
+                        object: nil,
+                        userInfo: ["destination": "Replacements"]
+                    )
+                }
+                .keyboardShortcut("4", modifiers: [.command])
+
+                Button("Settings") {
+                    NotificationCenter.default.post(
+                        name: .navigateToDestination,
+                        object: nil,
+                        userInfo: ["destination": "Settings"]
+                    )
+                }
+                .keyboardShortcut("5", modifiers: [.command])
+            }
         }
         
         MenuBarExtra(isInserted: $showMenuBarIcon) {

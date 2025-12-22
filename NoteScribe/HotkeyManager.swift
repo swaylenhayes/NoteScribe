@@ -4,8 +4,8 @@ import Carbon
 import AppKit
 
 extension KeyboardShortcuts.Name {
-    static let toggleMiniRecorder = Self("toggleMiniRecorder")
-    static let toggleMiniRecorder2 = Self("toggleMiniRecorder2")
+    static let toggleRecording = Self("toggleRecording")
+    static let toggleRecording2 = Self("toggleRecording2")
     static let pasteLastTranscription = Self("pasteLastTranscription")
     static let pasteLastEnhancement = Self("pasteLastEnhancement")
     static let retryLastTranscription = Self("retryLastTranscription")
@@ -22,7 +22,7 @@ class HotkeyManager: ObservableObject {
     @Published var selectedHotkey2: HotkeyOption {
         didSet {
             if selectedHotkey2 == .none {
-                KeyboardShortcuts.setShortcut(nil, for: .toggleMiniRecorder2)
+                KeyboardShortcuts.setShortcut(nil, for: .toggleRecording2)
             }
             UserDefaults.standard.set(selectedHotkey2.rawValue, forKey: "selectedHotkey2")
             setupHotkeyMonitoring()
@@ -199,7 +199,7 @@ class HotkeyManager: ObservableObject {
                     
                     Task { @MainActor in
                         guard self.canProcessHotkeyAction else { return }
-                        await self.transcriptionState.toggleMiniRecorder()
+                        await self.transcriptionState.toggleRecording()
                     }
                 } catch {
                     // Cancelled
@@ -219,19 +219,19 @@ class HotkeyManager: ObservableObject {
     private func setupCustomShortcutMonitoring() {
         // Hotkey 1
         if selectedHotkey1 == .custom {
-            KeyboardShortcuts.onKeyDown(for: .toggleMiniRecorder) { [weak self] in
+            KeyboardShortcuts.onKeyDown(for: .toggleRecording) { [weak self] in
                     Task { @MainActor in await self?.handleCustomShortcutKeyDown() }
                 }
-            KeyboardShortcuts.onKeyUp(for: .toggleMiniRecorder) { [weak self] in
+            KeyboardShortcuts.onKeyUp(for: .toggleRecording) { [weak self] in
                     Task { @MainActor in await self?.handleCustomShortcutKeyUp() }
                 }
         }
         // Hotkey 2
         if selectedHotkey2 == .custom {
-            KeyboardShortcuts.onKeyDown(for: .toggleMiniRecorder2) { [weak self] in
+            KeyboardShortcuts.onKeyDown(for: .toggleRecording2) { [weak self] in
                     Task { @MainActor in await self?.handleCustomShortcutKeyDown() }
                 }
-            KeyboardShortcuts.onKeyUp(for: .toggleMiniRecorder2) { [weak self] in
+            KeyboardShortcuts.onKeyUp(for: .toggleRecording2) { [weak self] in
                     Task { @MainActor in await self?.handleCustomShortcutKeyUp() }
                 }
         }
@@ -324,13 +324,13 @@ class HotkeyManager: ObservableObject {
             if isHandsFreeMode {
                 isHandsFreeMode = false
                 guard canProcessHotkeyAction else { return }
-                await transcriptionState.toggleMiniRecorder()
+                await transcriptionState.toggleRecording()
                 return
             }
 
             if !transcriptionState.isMiniRecorderVisible {
                 guard canProcessHotkeyAction else { return }
-                await transcriptionState.toggleMiniRecorder()
+                await transcriptionState.toggleRecording()
             }
         } else {
             let now = Date()
@@ -342,7 +342,7 @@ class HotkeyManager: ObservableObject {
                     isHandsFreeMode = true
                 } else {
                     guard canProcessHotkeyAction else { return }
-                    await transcriptionState.toggleMiniRecorder()
+                    await transcriptionState.toggleRecording()
                 }
             }
 
@@ -364,13 +364,13 @@ class HotkeyManager: ObservableObject {
         if isShortcutHandsFreeMode {
             isShortcutHandsFreeMode = false
             guard canProcessHotkeyAction else { return }
-            await transcriptionState.toggleMiniRecorder()
+            await transcriptionState.toggleRecording()
             return
         }
         
         if !transcriptionState.isMiniRecorderVisible {
             guard canProcessHotkeyAction else { return }
-            await transcriptionState.toggleMiniRecorder()
+            await transcriptionState.toggleRecording()
         }
     }
     
@@ -387,7 +387,7 @@ class HotkeyManager: ObservableObject {
                     isShortcutHandsFreeMode = true
                 } else {
                     guard canProcessHotkeyAction else { return }
-                    await transcriptionState.toggleMiniRecorder()
+                    await transcriptionState.toggleRecording()
                 }
             }
         
@@ -396,8 +396,8 @@ class HotkeyManager: ObservableObject {
     
     // Computed property for backward compatibility with UI
     var isShortcutConfigured: Bool {
-        let isHotkey1Configured = (selectedHotkey1 == .custom) ? (KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder) != nil) : true
-        let isHotkey2Configured = (selectedHotkey2 == .custom) ? (KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder2) != nil) : true
+        let isHotkey1Configured = (selectedHotkey1 == .custom) ? (KeyboardShortcuts.getShortcut(for: .toggleRecording) != nil) : true
+        let isHotkey2Configured = (selectedHotkey2 == .custom) ? (KeyboardShortcuts.getShortcut(for: .toggleRecording2) != nil) : true
         return isHotkey1Configured && isHotkey2Configured
     }
     

@@ -7,7 +7,6 @@ import KeyboardShortcuts
 final class PermissionManager: ObservableObject {
     @Published var audioPermissionStatus = AVCaptureDevice.authorizationStatus(for: .audio)
     @Published var isAccessibilityEnabled = false
-    @Published var isScreenRecordingEnabled = false
 
     init() {
         checkAllPermissions()
@@ -29,7 +28,6 @@ final class PermissionManager: ObservableObject {
 
     func checkAllPermissions() {
         checkAccessibilityPermissions()
-        checkScreenRecordingPermission()
         checkAudioPermissionStatus()
     }
 
@@ -43,14 +41,6 @@ final class PermissionManager: ObservableObject {
         _ = AXIsProcessTrustedWithOptions(options)
     }
 
-    func checkScreenRecordingPermission() {
-        isScreenRecordingEnabled = CGPreflightScreenCaptureAccess()
-    }
-
-    func requestScreenRecordingPermission() {
-        CGRequestScreenCaptureAccess()
-    }
-
     func checkAudioPermissionStatus() {
         audioPermissionStatus = AVCaptureDevice.authorizationStatus(for: .audio)
     }
@@ -60,6 +50,24 @@ final class PermissionManager: ObservableObject {
             Task { @MainActor in
                 self.audioPermissionStatus = granted ? .authorized : .denied
             }
+        }
+    }
+
+    static func requestInitialPermissions() {
+        let audioStatus = AVCaptureDevice.authorizationStatus(for: .audio)
+        let promptAccessibility = {
+            let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
+            _ = AXIsProcessTrustedWithOptions(options)
+        }
+
+        if audioStatus == .notDetermined {
+            AVCaptureDevice.requestAccess(for: .audio) { _ in
+                DispatchQueue.main.async {
+                    promptAccessibility()
+                }
+            }
+        } else {
+            promptAccessibility()
         }
     }
 }

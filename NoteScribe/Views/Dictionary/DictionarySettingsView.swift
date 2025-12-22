@@ -26,7 +26,7 @@ struct DictionarySettingsView: View {
                     }) {
                         Image(systemName: "square.and.arrow.down")
                             .font(.system(size: 18))
-                            .foregroundColor(.blue)
+                            .foregroundColor(.accentColor)
                     }
                     .buttonStyle(.plain)
                     .help("Import word replacements")
@@ -36,7 +36,7 @@ struct DictionarySettingsView: View {
                     }) {
                         Image(systemName: "square.and.arrow.up")
                             .font(.system(size: 18))
-                            .foregroundColor(.blue)
+                            .foregroundColor(.accentColor)
                     }
                     .buttonStyle(.plain)
                     .help("Export word replacements")

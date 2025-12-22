@@ -64,14 +64,7 @@ class Recorder: NSObject, ObservableObject, AVAudioRecorderDelegate {
         let lastDeviceID = UserDefaults.standard.string(forKey: "lastUsedMicrophoneDeviceID")
         
         if String(currentDeviceID) != lastDeviceID {
-            if let deviceName = deviceManager.availableDevices.first(where: { $0.id == currentDeviceID })?.name {
-                await MainActor.run {
-                    NotificationManager.shared.showNotification(
-                        title: "Using: \(deviceName)",
-                        type: .info
-                    )
-                }
-            }
+            // Device changed; keep tracking without user-facing notification.
         }
         UserDefaults.standard.set(String(currentDeviceID), forKey: "lastUsedMicrophoneDeviceID")
         

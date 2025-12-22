@@ -44,7 +44,6 @@ class SystemInfoService {
 
         PERMISSIONS:
         Accessibility: \(getAccessibilityStatus())
-        Screen Recording: \(getScreenRecordingStatus())
         Microphone: \(getMicrophoneStatus())
         """
 
@@ -168,10 +167,6 @@ class SystemInfoService {
     }
     private func getAccessibilityStatus() -> String {
         return AXIsProcessTrusted() ? "Granted" : "Not Granted"
-    }
-
-    private func getScreenRecordingStatus() -> String {
-        return CGPreflightScreenCaptureAccess() ? "Granted" : "Not Granted"
     }
 
     private func getMicrophoneStatus() -> String {

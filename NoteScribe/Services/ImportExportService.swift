@@ -5,8 +5,8 @@ import KeyboardShortcuts
 import LaunchAtLogin
 
 struct GeneralSettings: Codable {
-    let toggleMiniRecorderShortcut: KeyboardShortcuts.Shortcut?
-    let toggleMiniRecorderShortcut2: KeyboardShortcuts.Shortcut?
+    let toggleRecordingShortcut: KeyboardShortcuts.Shortcut?
+    let toggleRecordingShortcut2: KeyboardShortcuts.Shortcut?
     let retryLastTranscriptionShortcut: KeyboardShortcuts.Shortcut?
     let selectedHotkey1RawValue: String?
     let selectedHotkey2RawValue: String?
@@ -22,6 +22,105 @@ struct GeneralSettings: Codable {
     let isPauseMediaEnabled: Bool?
     let isTextFormattingEnabled: Bool?
     let isExperimentalFeaturesEnabled: Bool?
+
+    init(
+        toggleRecordingShortcut: KeyboardShortcuts.Shortcut?,
+        toggleRecordingShortcut2: KeyboardShortcuts.Shortcut?,
+        retryLastTranscriptionShortcut: KeyboardShortcuts.Shortcut?,
+        selectedHotkey1RawValue: String?,
+        selectedHotkey2RawValue: String?,
+        launchAtLoginEnabled: Bool?,
+        isMenuBarOnly: Bool?,
+        isTranscriptionCleanupEnabled: Bool?,
+        transcriptionRetentionMinutes: Int?,
+        isAudioCleanupEnabled: Bool?,
+        audioRetentionPeriod: Int?,
+        isSoundFeedbackEnabled: Bool?,
+        isSystemMuteEnabled: Bool?,
+        isPauseMediaEnabled: Bool?,
+        isTextFormattingEnabled: Bool?,
+        isExperimentalFeaturesEnabled: Bool?
+    ) {
+        self.toggleRecordingShortcut = toggleRecordingShortcut
+        self.toggleRecordingShortcut2 = toggleRecordingShortcut2
+        self.retryLastTranscriptionShortcut = retryLastTranscriptionShortcut
+        self.selectedHotkey1RawValue = selectedHotkey1RawValue
+        self.selectedHotkey2RawValue = selectedHotkey2RawValue
+        self.launchAtLoginEnabled = launchAtLoginEnabled
+        self.isMenuBarOnly = isMenuBarOnly
+        self.isTranscriptionCleanupEnabled = isTranscriptionCleanupEnabled
+        self.transcriptionRetentionMinutes = transcriptionRetentionMinutes
+        self.isAudioCleanupEnabled = isAudioCleanupEnabled
+        self.audioRetentionPeriod = audioRetentionPeriod
+        self.isSoundFeedbackEnabled = isSoundFeedbackEnabled
+        self.isSystemMuteEnabled = isSystemMuteEnabled
+        self.isPauseMediaEnabled = isPauseMediaEnabled
+        self.isTextFormattingEnabled = isTextFormattingEnabled
+        self.isExperimentalFeaturesEnabled = isExperimentalFeaturesEnabled
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case toggleRecordingShortcut
+        case toggleRecordingShortcut2
+        case retryLastTranscriptionShortcut
+        case selectedHotkey1RawValue
+        case selectedHotkey2RawValue
+        case launchAtLoginEnabled
+        case isMenuBarOnly
+        case isTranscriptionCleanupEnabled
+        case transcriptionRetentionMinutes
+        case isAudioCleanupEnabled
+        case audioRetentionPeriod
+        case isSoundFeedbackEnabled
+        case isSystemMuteEnabled
+        case isPauseMediaEnabled
+        case isTextFormattingEnabled
+        case isExperimentalFeaturesEnabled
+        case toggleMiniRecorderShortcut
+        case toggleMiniRecorderShortcut2
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        toggleRecordingShortcut = try container.decodeIfPresent(KeyboardShortcuts.Shortcut.self, forKey: .toggleRecordingShortcut)
+            ?? container.decodeIfPresent(KeyboardShortcuts.Shortcut.self, forKey: .toggleMiniRecorderShortcut)
+        toggleRecordingShortcut2 = try container.decodeIfPresent(KeyboardShortcuts.Shortcut.self, forKey: .toggleRecordingShortcut2)
+            ?? container.decodeIfPresent(KeyboardShortcuts.Shortcut.self, forKey: .toggleMiniRecorderShortcut2)
+        retryLastTranscriptionShortcut = try container.decodeIfPresent(KeyboardShortcuts.Shortcut.self, forKey: .retryLastTranscriptionShortcut)
+        selectedHotkey1RawValue = try container.decodeIfPresent(String.self, forKey: .selectedHotkey1RawValue)
+        selectedHotkey2RawValue = try container.decodeIfPresent(String.self, forKey: .selectedHotkey2RawValue)
+        launchAtLoginEnabled = try container.decodeIfPresent(Bool.self, forKey: .launchAtLoginEnabled)
+        isMenuBarOnly = try container.decodeIfPresent(Bool.self, forKey: .isMenuBarOnly)
+        isTranscriptionCleanupEnabled = try container.decodeIfPresent(Bool.self, forKey: .isTranscriptionCleanupEnabled)
+        transcriptionRetentionMinutes = try container.decodeIfPresent(Int.self, forKey: .transcriptionRetentionMinutes)
+        isAudioCleanupEnabled = try container.decodeIfPresent(Bool.self, forKey: .isAudioCleanupEnabled)
+        audioRetentionPeriod = try container.decodeIfPresent(Int.self, forKey: .audioRetentionPeriod)
+        isSoundFeedbackEnabled = try container.decodeIfPresent(Bool.self, forKey: .isSoundFeedbackEnabled)
+        isSystemMuteEnabled = try container.decodeIfPresent(Bool.self, forKey: .isSystemMuteEnabled)
+        isPauseMediaEnabled = try container.decodeIfPresent(Bool.self, forKey: .isPauseMediaEnabled)
+        isTextFormattingEnabled = try container.decodeIfPresent(Bool.self, forKey: .isTextFormattingEnabled)
+        isExperimentalFeaturesEnabled = try container.decodeIfPresent(Bool.self, forKey: .isExperimentalFeaturesEnabled)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(toggleRecordingShortcut, forKey: .toggleRecordingShortcut)
+        try container.encodeIfPresent(toggleRecordingShortcut2, forKey: .toggleRecordingShortcut2)
+        try container.encodeIfPresent(retryLastTranscriptionShortcut, forKey: .retryLastTranscriptionShortcut)
+        try container.encodeIfPresent(selectedHotkey1RawValue, forKey: .selectedHotkey1RawValue)
+        try container.encodeIfPresent(selectedHotkey2RawValue, forKey: .selectedHotkey2RawValue)
+        try container.encodeIfPresent(launchAtLoginEnabled, forKey: .launchAtLoginEnabled)
+        try container.encodeIfPresent(isMenuBarOnly, forKey: .isMenuBarOnly)
+        try container.encodeIfPresent(isTranscriptionCleanupEnabled, forKey: .isTranscriptionCleanupEnabled)
+        try container.encodeIfPresent(transcriptionRetentionMinutes, forKey: .transcriptionRetentionMinutes)
+        try container.encodeIfPresent(isAudioCleanupEnabled, forKey: .isAudioCleanupEnabled)
+        try container.encodeIfPresent(audioRetentionPeriod, forKey: .audioRetentionPeriod)
+        try container.encodeIfPresent(isSoundFeedbackEnabled, forKey: .isSoundFeedbackEnabled)
+        try container.encodeIfPresent(isSystemMuteEnabled, forKey: .isSystemMuteEnabled)
+        try container.encodeIfPresent(isPauseMediaEnabled, forKey: .isPauseMediaEnabled)
+        try container.encodeIfPresent(isTextFormattingEnabled, forKey: .isTextFormattingEnabled)
+        try container.encodeIfPresent(isExperimentalFeaturesEnabled, forKey: .isExperimentalFeaturesEnabled)
+    }
 }
 
 // OFFLINE MODE: Removed customCloudModels field (not supported)
@@ -71,8 +170,8 @@ class ImportExportService {
         let exportedWordReplacements = UserDefaults.standard.dictionary(forKey: wordReplacementsKey) as? [String: String]
 
         let generalSettingsToExport = GeneralSettings(
-            toggleMiniRecorderShortcut: KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder),
-            toggleMiniRecorderShortcut2: KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder2),
+            toggleRecordingShortcut: KeyboardShortcuts.getShortcut(for: .toggleRecording),
+            toggleRecordingShortcut2: KeyboardShortcuts.getShortcut(for: .toggleRecording2),
             retryLastTranscriptionShortcut: KeyboardShortcuts.getShortcut(for: .retryLastTranscription),
             selectedHotkey1RawValue: hotkeyManager.selectedHotkey1.rawValue,
             selectedHotkey2RawValue: hotkeyManager.selectedHotkey2.rawValue,
@@ -175,11 +274,11 @@ class ImportExportService {
                     }
 
                     if let general = importedSettings.generalSettings {
-                        if let shortcut = general.toggleMiniRecorderShortcut {
-                            KeyboardShortcuts.setShortcut(shortcut, for: .toggleMiniRecorder)
+                        if let shortcut = general.toggleRecordingShortcut {
+                            KeyboardShortcuts.setShortcut(shortcut, for: .toggleRecording)
                         }
-                        if let shortcut2 = general.toggleMiniRecorderShortcut2 {
-                            KeyboardShortcuts.setShortcut(shortcut2, for: .toggleMiniRecorder2)
+                        if let shortcut2 = general.toggleRecordingShortcut2 {
+                            KeyboardShortcuts.setShortcut(shortcut2, for: .toggleRecording2)
                         }
                         if let retryShortcut = general.retryLastTranscriptionShortcut {
                             KeyboardShortcuts.setShortcut(retryShortcut, for: .retryLastTranscription)

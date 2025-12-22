@@ -61,7 +61,7 @@
 		2752670B2EE2996E007CA86C /* NoteScribeCSVExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266182EE2996E007CA86C /* NoteScribeCSVExportService.swift */; };
 		2752670C2EE2996E007CA86C /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266812EE2996E007CA86C /* SoundManager.swift */; };
 		2752670D2EE2996E007CA86C /* AudioCleanupSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752664D2EE2996E007CA86C /* AudioCleanupSettingsView.swift */; };
-		2752670F2EE2996E007CA86C /* DismissMiniRecorderIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275265A72EE2996E007CA86C /* DismissMiniRecorderIntent.swift */; };
+		2752670F2EE2996E007CA86C /* CancelRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275265A72EE2996E007CA86C /* CancelRecordingIntent.swift */; };
 		275267132EE2996E007CA86C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266572EE2996E007CA86C /* ContentView.swift */; };
 		275267142EE2996E007CA86C /* CustomSoundSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752664F2EE2996E007CA86C /* CustomSoundSettingsView.swift */; };
 		275267162EE2996E007CA86C /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266162EE2996E007CA86C /* TranscriptionService.swift */; };
@@ -82,7 +82,7 @@
 		275267322EE2996E007CA86C /* WordReplacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266332EE2996E007CA86C /* WordReplacementView.swift */; };
 		275267342EE2996E007CA86C /* DictionaryImportExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266052EE2996E007CA86C /* DictionaryImportExportService.swift */; };
 		2752673A2EE2996E007CA86C /* NoteScribe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266832EE2996E007CA86C /* NoteScribe.swift */; };
-		2752673E2EE2996E007CA86C /* ToggleMiniRecorderIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275265A82EE2996E007CA86C /* ToggleMiniRecorderIntent.swift */; };
+		2752673E2EE2996E007CA86C /* StartStopRecordingIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275265A82EE2996E007CA86C /* StartStopRecordingIntent.swift */; };
 		275267402EE2996E007CA86C /* TranscriptionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266632EE2996E007CA86C /* TranscriptionCard.swift */; };
 		275267412EE2996E007CA86C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266532EE2996E007CA86C /* SettingsView.swift */; };
 		275267422EE2996E007CA86C /* ExperimentalFeaturesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266512EE2996E007CA86C /* ExperimentalFeaturesSection.swift */; };
@@ -145,8 +145,8 @@
 
 /* Begin PBXFileReference section */
 		275265A62EE2996E007CA86C /* AppShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppShortcuts.swift; sourceTree = "<group>"; };
-		275265A72EE2996E007CA86C /* DismissMiniRecorderIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissMiniRecorderIntent.swift; sourceTree = "<group>"; };
-		275265A82EE2996E007CA86C /* ToggleMiniRecorderIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleMiniRecorderIntent.swift; sourceTree = "<group>"; };
+		275265A72EE2996E007CA86C /* CancelRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelRecordingIntent.swift; sourceTree = "<group>"; };
+		275265A82EE2996E007CA86C /* StartStopRecordingIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartStopRecordingIntent.swift; sourceTree = "<group>"; };
 		275265AD2EE2996E007CA86C /* PredefinedModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredefinedModels.swift; sourceTree = "<group>"; };
 		275265B02EE2996E007CA86C /* Transcription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transcription.swift; sourceTree = "<group>"; };
 		275265B12EE2996E007CA86C /* TranscriptionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionModel.swift; sourceTree = "<group>"; };
@@ -317,8 +317,8 @@
 			isa = PBXGroup;
 			children = (
 				275265A62EE2996E007CA86C /* AppShortcuts.swift */,
-				275265A72EE2996E007CA86C /* DismissMiniRecorderIntent.swift */,
-				275265A82EE2996E007CA86C /* ToggleMiniRecorderIntent.swift */,
+				275265A72EE2996E007CA86C /* CancelRecordingIntent.swift */,
+				275265A82EE2996E007CA86C /* StartStopRecordingIntent.swift */,
 			);
 			path = AppIntents;
 			sourceTree = "<group>";
@@ -768,7 +768,7 @@
 				2752670B2EE2996E007CA86C /* NoteScribeCSVExportService.swift in Sources */,
 				2752670C2EE2996E007CA86C /* SoundManager.swift in Sources */,
 				2752670D2EE2996E007CA86C /* AudioCleanupSettingsView.swift in Sources */,
-				2752670F2EE2996E007CA86C /* DismissMiniRecorderIntent.swift in Sources */,
+				2752670F2EE2996E007CA86C /* CancelRecordingIntent.swift in Sources */,
 				275267132EE2996E007CA86C /* ContentView.swift in Sources */,
 				275267142EE2996E007CA86C /* CustomSoundSettingsView.swift in Sources */,
 				275267162EE2996E007CA86C /* TranscriptionService.swift in Sources */,
@@ -789,7 +789,7 @@
 				275267322EE2996E007CA86C /* WordReplacementView.swift in Sources */,
 				275267342EE2996E007CA86C /* DictionaryImportExportService.swift in Sources */,
 				2752673A2EE2996E007CA86C /* NoteScribe.swift in Sources */,
-				2752673E2EE2996E007CA86C /* ToggleMiniRecorderIntent.swift in Sources */,
+				2752673E2EE2996E007CA86C /* StartStopRecordingIntent.swift in Sources */,
 				275267402EE2996E007CA86C /* TranscriptionCard.swift in Sources */,
 				275267412EE2996E007CA86C /* SettingsView.swift in Sources */,
 				275267422EE2996E007CA86C /* ExperimentalFeaturesSection.swift in Sources */,

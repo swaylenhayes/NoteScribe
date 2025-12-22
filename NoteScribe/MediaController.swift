@@ -22,6 +22,7 @@ class MediaController: ObservableObject {
         if !UserDefaults.standard.contains(key: "isSystemMuteEnabled") {
             UserDefaults.standard.set(true, forKey: "isSystemMuteEnabled")
         }
+        isSystemMuteEnabled = UserDefaults.standard.bool(forKey: "isSystemMuteEnabled")
     }
     
     /// Checks if the system audio is currently muted using AppleScript

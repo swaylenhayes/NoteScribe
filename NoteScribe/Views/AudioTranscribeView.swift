@@ -117,7 +117,7 @@ struct AudioTranscribeView: View {
                         Button("Choose File") {
                             selectFile()
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
                     }
                     .padding(32)
                 }

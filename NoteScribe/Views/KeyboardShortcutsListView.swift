@@ -168,8 +168,8 @@ struct KeyboardShortcutsListView: View {
         pasteOriginalShortcut = KeyboardShortcuts.getShortcut(for: .pasteLastTranscription)
         pasteEnhancedShortcut = KeyboardShortcuts.getShortcut(for: .pasteLastEnhancement)
         retryShortcut = KeyboardShortcuts.getShortcut(for: .retryLastTranscription)
-        toggleHotkey1 = KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder)
-        toggleHotkey2 = KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder2)
+        toggleHotkey1 = KeyboardShortcuts.getShortcut(for: .toggleRecording)
+        toggleHotkey2 = KeyboardShortcuts.getShortcut(for: .toggleRecording2)
     }
 }
 

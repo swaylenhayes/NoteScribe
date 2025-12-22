@@ -236,7 +236,7 @@ struct KeyCapView: View {
 
 #Preview {
     VStack(spacing: 20) {
-        KeyboardShortcutView(shortcut: KeyboardShortcuts.getShortcut(for: .toggleMiniRecorder))
+        KeyboardShortcutView(shortcut: KeyboardShortcuts.getShortcut(for: .toggleRecording))
         KeyboardShortcutView(shortcut: nil)
     }
     .padding()

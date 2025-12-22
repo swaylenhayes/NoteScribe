@@ -1,7 +1,11 @@
 import Foundation
 import AppKit
+import ApplicationServices
 
 class CursorPaster {
+    private static let pasteRetryDelay: TimeInterval = 0.25
+    private static let maxPasteRetries = 20
+    private static let restoreDelay: TimeInterval = 0.9
 
     static func pasteAtCursor(_ text: String) {
         let pasteboard = NSPasteboard.general
@@ -24,27 +28,68 @@ class CursorPaster {
 
         _ = ClipboardManager.setClipboard(text, transient: !preserveTranscript)
 
+        attemptPaste(
+            savedContents: savedContents,
+            preserveTranscript: preserveTranscript,
+            attempt: 0
+        )
+    }
+    
+    private static func attemptPaste(
+        savedContents: [(NSPasteboard.PasteboardType, Data)],
+        preserveTranscript: Bool,
+        attempt: Int
+    ) {
+        if !isAccessibilityTrusted(prompt: true) {
+            if attempt == 0 {
+                Task { @MainActor in
+                    NotificationManager.shared.showNotification(
+                        title: "Enable Accessibility to paste. Will retry…",
+                        type: .info
+                    )
+                }
+            }
+
+            if attempt < maxPasteRetries {
+                DispatchQueue.main.asyncAfter(deadline: .now() + pasteRetryDelay) {
+                    attemptPaste(
+                        savedContents: savedContents,
+                        preserveTranscript: preserveTranscript,
+                        attempt: attempt + 1
+                    )
+                }
+            } else if !preserveTranscript {
+                restoreClipboard(savedContents)
+            }
+            return
+        }
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            pasteUsingCommandV()
+            performPaste()
         }
 
         if !preserveTranscript {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
-                if !savedContents.isEmpty {
-                    pasteboard.clearContents()
-                    for (type, data) in savedContents {
-                        pasteboard.setData(data, forType: type)
-                    }
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + restoreDelay) {
+                restoreClipboard(savedContents)
             }
         }
     }
-    
-    private static func pasteUsingCommandV() {
-        guard AXIsProcessTrusted() else {
-            return
+
+    private static func isAccessibilityTrusted(prompt: Bool) -> Bool {
+        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: prompt]
+        return AXIsProcessTrustedWithOptions(options)
+    }
+
+    private static func restoreClipboard(_ savedContents: [(NSPasteboard.PasteboardType, Data)]) {
+        guard !savedContents.isEmpty else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        for (type, data) in savedContents {
+            pasteboard.setData(data, forType: type)
         }
-        
+    }
+
+    private static func performPaste() {
         let source = CGEventSource(stateID: .hidSystemState)
         
         let cmdDown = CGEvent(keyboardEventSource: source, virtualKey: 0x37, keyDown: true)

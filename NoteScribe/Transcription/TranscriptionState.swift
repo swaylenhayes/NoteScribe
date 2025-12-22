@@ -169,7 +169,7 @@ class TranscriptionState: NSObject, ObservableObject {
                         } catch {
                             self.logger.error("❌ Failed to start recording: \(error.localizedDescription)")
                             NotificationManager.shared.showNotification(title: "Recording failed to start", type: .error)
-                            await self.dismissMiniRecorder()
+                            await self.cancelRecording()
                             // Do not remove the file on a failed start, to preserve all recordings.
                             self.recordedFile = nil
                         }
@@ -182,7 +182,21 @@ class TranscriptionState: NSObject, ObservableObject {
     }
     
     private func requestRecordPermission(response: @escaping (Bool) -> Void) {
-        response(true)
+        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+        switch status {
+        case .authorized:
+            response(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .audio) { granted in
+                DispatchQueue.main.async {
+                    response(granted)
+                }
+            }
+        case .denied, .restricted:
+            response(false)
+        @unknown default:
+            response(false)
+        }
     }
     
     private func transcribeAudio(on transcription: Transcription) async {
@@ -308,7 +322,7 @@ class TranscriptionState: NSObject, ObservableObject {
 
         // OFFLINE MODE: Removed prompt detection restore
 
-        await self.dismissMiniRecorder()
+        await self.cancelRecording()
 
         shouldCancelRecording = false
     }
@@ -324,7 +338,7 @@ class TranscriptionState: NSObject, ObservableObject {
     }
 
     private func cleanupAndDismiss() async {
-        await dismissMiniRecorder()
+        await cancelRecordingUI()
     }
 
     // MARK: - v1.2 Stub Functions (Parakeet V3 only - no local Transcription models)

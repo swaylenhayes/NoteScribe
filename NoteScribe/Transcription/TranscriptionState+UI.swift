@@ -17,7 +17,7 @@ extension TranscriptionState {
     
     // MARK: - Mini Recorder Management
     
-    func toggleMiniRecorder() async {
+    func toggleRecording() async {
         if isMiniRecorderVisible {
             if recordingState == .recording {
                 await toggleRecord()
@@ -35,7 +35,7 @@ extension TranscriptionState {
         }
     }
     
-    func dismissMiniRecorder() async {
+    func cancelRecordingUI() async {
         if recordingState == .busy { return }
 
         let wasRecording = recordingState == .recording
@@ -81,27 +81,27 @@ extension TranscriptionState {
     func cancelRecording() async {
         SoundManager.shared.playEscSound()
         shouldCancelRecording = true
-        await dismissMiniRecorder()
+        await cancelRecordingUI()
     }
     
     // MARK: - Notification Handling
     
     func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(handleToggleMiniRecorder), name: .toggleMiniRecorder, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDismissMiniRecorder), name: .dismissMiniRecorder, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleToggleRecording), name: .toggleRecording, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCancelRecording), name: .cancelRecording, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleLicenseStatusChanged), name: .licenseStatusChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handlePromptChange), name: .promptDidChange, object: nil)
     }
     
-    @objc public func handleToggleMiniRecorder() {
+    @objc public func handleToggleRecording() {
         Task {
-            await toggleMiniRecorder()
+            await toggleRecording()
         }
     }
     
-    @objc public func handleDismissMiniRecorder() {
+    @objc public func handleCancelRecording() {
         Task {
-            await dismissMiniRecorder()
+            await cancelRecordingUI()
         }
     }
     
