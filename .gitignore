@@ -5,7 +5,14 @@ NoteScribe.xcodeproj/*.backup*
 NoteScribe.xcodeproj/project.pbxproj.backup*
 NoteScribe.xcodeproj/xcuserdata/
 **/*.xcuserstate
+
+# Archived model references (no longer used)
 nvidia_parakeet-v2-L/
 nvidia_parakeet-v3-L/
 NoteScribe/Resources/BundledModels/Parakeet/nvidia_parakeet-v2-L/
 NoteScribe/Resources/BundledModels/Parakeet/nvidia_parakeet-v3-L/
+
+# Compiled CoreML models (copied at build time, not committed)
+# Keep directory structure and metadata (config.json, vocab), ignore compiled models
+NoteScribe/Resources/BundledModels/Parakeet/**/*.mlmodelc/
+NoteScribe/Resources/BundledModels/VAD/**/*.mlmodelc/

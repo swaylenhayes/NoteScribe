@@ -92,7 +92,7 @@ struct NoteScribeApp: App {
         _menuBarManager = StateObject(wrappedValue: menuBarManager)
         appDelegate.menuBarManager = menuBarManager
         
-        // Initialize bundled models on first launch
+        // Initialize bundled models on first launch, then pre-warm for instant transcription
         Task {
             let modelInitService = ModelInitializationService()
             do {
@@ -100,6 +100,9 @@ struct NoteScribeApp: App {
             } catch {
                 logger.error("Model initialization failed: \(error.localizedDescription)")
             }
+
+            // Pre-warm the CoreML model to eliminate cold start delay on first transcription
+            await transcriptionState.prewarmModel()
         }
 
         // Ensure no lingering recording state from previous runs

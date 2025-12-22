@@ -47,6 +47,56 @@ struct VisualEffectView: NSViewRepresentable {
     }
 }
 
+/// Full-screen overlay shown while the AI model is loading at startup
+struct ModelLoadingOverlay: View {
+    @State private var animationPhase = 0.0
+
+    var body: some View {
+        ZStack {
+            // Semi-transparent background
+            Color.black.opacity(0.7)
+                .ignoresSafeArea()
+
+            VStack(spacing: 24) {
+                // Animated brain/AI icon
+                Image(systemName: "brain")
+                    .font(.system(size: 64))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.blue, .purple, .pink],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .symbolEffect(.pulse, options: .repeating)
+
+                VStack(spacing: 12) {
+                    Text("Loading AI Model")
+                        .font(.title)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+
+                    Text("Preparing for instant transcription...")
+                        .font(.body)
+                        .foregroundColor(.white.opacity(0.7))
+                }
+
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(1.5)
+                    .tint(.white)
+                    .padding(.top, 8)
+            }
+            .padding(48)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.ultraThinMaterial)
+            )
+        }
+        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.colorScheme) private var colorScheme
@@ -57,37 +107,44 @@ struct ContentView: View {
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ScratchpadView()
-                .tabItem {
-                    Label("NoteScribe", systemImage: TabDestination.scratchpad.icon)
-                }
-                .tag(TabDestination.scratchpad)
+        ZStack {
+            TabView(selection: $selectedTab) {
+                ScratchpadView()
+                    .tabItem {
+                        Label("NoteScribe", systemImage: TabDestination.scratchpad.icon)
+                    }
+                    .tag(TabDestination.scratchpad)
 
-            AudioTranscribeView()
-                .tabItem {
-                    Label("File Transcription", systemImage: TabDestination.transcription.icon)
-                }
-                .tag(TabDestination.transcription)
+                AudioTranscribeView()
+                    .tabItem {
+                        Label("File Transcription", systemImage: TabDestination.transcription.icon)
+                    }
+                    .tag(TabDestination.transcription)
 
-            TranscriptionHistoryView()
-                .tabItem {
-                    Label("History", systemImage: TabDestination.history.icon)
-                }
-                .tag(TabDestination.history)
+                TranscriptionHistoryView()
+                    .tabItem {
+                        Label("History", systemImage: TabDestination.history.icon)
+                    }
+                    .tag(TabDestination.history)
 
-            DictionarySettingsView()
-                .tabItem {
-                    Label("Replacements", systemImage: TabDestination.replacements.icon)
-                }
-                .tag(TabDestination.replacements)
+                DictionarySettingsView()
+                    .tabItem {
+                        Label("Replacements", systemImage: TabDestination.replacements.icon)
+                    }
+                    .tag(TabDestination.replacements)
 
-            SettingsView()
-                .environmentObject(transcriptionState)
-                .tabItem {
-                    Label("Settings", systemImage: TabDestination.settings.icon)
-                }
-                .tag(TabDestination.settings)
+                SettingsView()
+                    .environmentObject(transcriptionState)
+                    .tabItem {
+                        Label("Settings", systemImage: TabDestination.settings.icon)
+                    }
+                    .tag(TabDestination.settings)
+            }
+
+            // Model loading overlay - shown during initial warmup
+            if transcriptionState.isModelLoading {
+                ModelLoadingOverlay()
+            }
         }
         .frame(minWidth: 940, minHeight: 730)
         // OFFLINE MODE: Removed NoteScribe Pro, Enhancement, Power Mode destinations

@@ -9,6 +9,18 @@ struct MenuBarView: View {
     
     var body: some View {
         VStack {
+            // Model loading status indicator
+            if transcriptionState.isModelLoading {
+                HStack {
+                    ProgressView()
+                        .controlSize(.small)
+                    Text("Loading AI model...")
+                        .foregroundColor(.secondary)
+                }
+                .padding(.vertical, 4)
+                Divider()
+            }
+
             Button("Open NoteScribe") {
                 menuBarManager.openMainWindowAndNavigate(to: "NoteScribe")
             }

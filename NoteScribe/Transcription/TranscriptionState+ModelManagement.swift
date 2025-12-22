@@ -44,4 +44,27 @@ extension TranscriptionState {
             setDefaultTranscriptionModel(defaultModel)
         }
     }
+
+    // MARK: - Model Warmup
+
+    /// Pre-warms the CoreML model at app startup to eliminate cold start delay on first transcription.
+    /// Call this after app initialization to load the model into memory in the background.
+    func prewarmModel() async {
+        guard let parakeetModel = currentTranscriptionModel as? ParakeetModel else {
+            logger.info("No Parakeet model selected, skipping warmup")
+            return
+        }
+
+        logger.info("Pre-warming model: \(parakeetModel.name)")
+        isModelLoading = true
+
+        do {
+            try await parakeetTranscriptionService.loadModel(for: parakeetModel)
+            isModelLoading = false
+            logger.info("Model warmup complete - ready for instant transcription")
+        } catch {
+            isModelLoading = false
+            logger.error("Model warmup failed: \(error.localizedDescription)")
+        }
+    }
 } 

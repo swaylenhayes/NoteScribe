@@ -11,22 +11,59 @@ import Foundation
     
     // OFFLINE MODE: Only return pre-bundled models, no custom models
     static var models: [any TranscriptionModel] {
-        return predefinedModels
+        return detectedModels
     }
-    
-    // Only Parakeet V3 model
-    private static let predefinedModels: [any TranscriptionModel] = [
-        ParakeetModel(
-            name: "parakeet-tdt-0.6b-v3",
-            displayName: "Parakeet V3 CoreML",
-            description: "NVIDIA's Parakeet V3 model (CoreML) (English and 25 European languages).",
-            size: "483 MB",
-            speed: 0.99,
-            accuracy: 0.94,
-            ramUsage: 0.8,
-            supportedLanguages: getLanguageDictionary(isMultilingual: true, provider: .parakeet)
-        )
-    ]
+
+    // Auto-detect bundled Parakeet model at runtime
+    private static var detectedModels: [any TranscriptionModel] {
+        guard let bundledModelName = detectBundledParakeetModel() else {
+            return []
+        }
+
+        let isV3 = bundledModelName.contains("v3")
+        return [
+            ParakeetModel(
+                name: bundledModelName,
+                displayName: isV3 ? "Parakeet V3 CoreML" : "Parakeet V2 CoreML",
+                description: isV3
+                    ? "NVIDIA's Parakeet V3 model (CoreML) (English and 25 European languages)."
+                    : "NVIDIA's Parakeet V2 model (CoreML) (English only).",
+                size: "483 MB",
+                speed: 0.99,
+                accuracy: 0.94,
+                ramUsage: 0.8,
+                supportedLanguages: getLanguageDictionary(isMultilingual: isV3, provider: .parakeet)
+            )
+        ]
+    }
+
+    /// Scans app bundle for a Parakeet model folder and returns the model name
+    private static func detectBundledParakeetModel() -> String? {
+        guard let resourcePath = Bundle.main.resourcePath else { return nil }
+        let resourceURL = URL(fileURLWithPath: resourcePath)
+
+        let modelNames = ["parakeet-tdt-0.6b-v3-coreml", "parakeet-tdt-0.6b-v2-coreml"]
+
+        // Check all possible paths where models might be located
+        let searchPaths = [
+            "Parakeet",                    // New unified build: Resources/Parakeet/
+            "",                            // Direct in Resources/
+            "BundledModels/Parakeet"       // Legacy nested path
+        ]
+
+        for searchPath in searchPaths {
+            let basePath = searchPath.isEmpty ? resourceURL : resourceURL.appendingPathComponent(searchPath)
+            for modelName in modelNames {
+                let modelPath = basePath.appendingPathComponent(modelName).path
+                if FileManager.default.fileExists(atPath: modelPath) {
+                    // Return name without -coreml suffix
+                    return modelName.replacingOccurrences(of: "-coreml", with: "")
+                }
+            }
+        }
+
+        return nil
+    }
  
      static let allLanguages = [
          "auto": "Auto-detect",

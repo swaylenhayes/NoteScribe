@@ -96,8 +96,7 @@
 		2752674F2EE2996E007CA86C /* RecorderComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752664A2EE2996E007CA86C /* RecorderComponents.swift */; };
 		275267502EE2996E007CA86C /* KeyboardShortcutsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266592EE2996E007CA86C /* KeyboardShortcutsListView.swift */; };
 		275267532EE2996E007CA86C /* AnimatedCopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266262EE2996E007CA86C /* AnimatedCopyButton.swift */; };
-		2785FDE92EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml in Resources */ = {isa = PBXBuildFile; fileRef = 2785FDE82EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml */; };
-		27F5661D2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml in Resources */ = {isa = PBXBuildFile; fileRef = 27F5661C2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml */; };
+		PARAKEET0000000000000001 /* Parakeet in Resources */ = {isa = PBXBuildFile; fileRef = PARAKEET0000000000000000 /* Parakeet */; };
 		2BAA90C1C871A90588961825 /* DictionaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7AE540B935BEA0EDECE17F /* DictionaryItem.swift */; };
 		A500567D246E4AFAA32BA913 /* ModelInitializationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */; };
 		A5679A55F846AEDD61870A4C /* Common/View+Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5679A55F846AEDD61870A4B /* Common/View+Placeholder.swift */; };
@@ -234,8 +233,7 @@
 		275266822EE2996E007CA86C /* NoteScribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NoteScribe.entitlements; sourceTree = "<group>"; };
 		275266832EE2996E007CA86C /* NoteScribe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteScribe.swift; sourceTree = "<group>"; };
 		275266842EE2996E007CA86C /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
-		2785FDE82EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "parakeet-tdt-0.6b-v2-coreml"; path = "NoteScribe/Resources/BundledModels/Parakeet/parakeet-tdt-0.6b-v2-coreml"; sourceTree = "<group>"; };
-		27F5661C2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "parakeet-tdt-0.6b-v3-coreml"; path = "NoteScribe/Resources/BundledModels/Parakeet/parakeet-tdt-0.6b-v3-coreml"; sourceTree = "<group>"; };
+		PARAKEET0000000000000000 /* Parakeet */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Parakeet; path = NoteScribe/Resources/BundledModels/Parakeet; sourceTree = "<group>"; };
 		93F15E2385FA4BACA1AE82AF /* TranscriptionState+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TranscriptionState+UI.swift"; sourceTree = "<group>"; };
 		A5679A55F846AEDD61870A4B /* Common/View+Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Common/View+Placeholder.swift"; sourceTree = "<group>"; };
 		B0D39A1B2F00000100000001 /* silero-vad-coreml */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "silero-vad-coreml"; path = "NoteScribe/Resources/BundledModels/VAD/silero-vad-coreml"; sourceTree = "<group>"; };
@@ -247,40 +245,7 @@
 		ED7AE540B935BEA0EDECE17F /* DictionaryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		27F566192EE37ED9000662BE /* Exceptions for "BundledModels" folder in "NoteScribe" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/config.json",
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/Decoder.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/Encoder.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/JointDecision.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/parakeet_vocab.json",
-				"Parakeet/parakeet-tdt-0.6b-v2-coreml/Preprocessor.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/config.json",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/Decoder.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/Encoder.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/JointDecision.mlmodelc",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/parakeet_v3_vocab.json",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/parakeet_vocab.json",
-				"Parakeet/parakeet-tdt-0.6b-v3-coreml/Preprocessor.mlmodelc",
-				"VAD/silero-vad-coreml/config.json",
-				"VAD/silero-vad-coreml/silero-vad-unified-256ms-v6.0.0.mlmodelc",
-			);
-			target = E11473AF2CBE0F0A00318EE4 /* NoteScribe */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		27B0E8C42EE2E12A0038647C /* BundledModels */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				27F566192EE37ED9000662BE /* Exceptions for "BundledModels" folder in "NoteScribe" target */,
-			);
-			path = BundledModels;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
+/* PBXFileSystemSynchronizedBuildFileExceptionSet and PBXFileSystemSynchronizedRootGroup sections removed - using direct folder references instead */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E11473AD2CBE0F0A00318EE4 /* Frameworks */ = {
@@ -361,7 +326,6 @@
 			isa = PBXGroup;
 			children = (
 				275265E22EE2996E007CA86C /* Sounds */,
-				27B0E8C42EE2E12A0038647C /* BundledModels */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -531,8 +495,7 @@
 		E11473A72CBE0F0A00318EE4 = {
 			isa = PBXGroup;
 			children = (
-				2785FDE82EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml */,
-				27F5661C2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml */,
+				PARAKEET0000000000000000 /* Parakeet */,
 				B0D39A1B2F00000100000001 /* silero-vad-coreml */,
 				275266852EE2996E007CA86C /* NoteScribe */,
 				E114741C2CBE1DE200318EE4 /* Frameworks */,
@@ -574,7 +537,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				27B0E8C42EE2E12A0038647C /* BundledModels */,
 			);
 			name = NoteScribe;
 			packageProductDependencies = (
@@ -686,9 +648,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2785FDE92EF4151200726523 /* parakeet-tdt-0.6b-v2-coreml in Resources */,
+				PARAKEET0000000000000001 /* Parakeet in Resources */,
 				271BF9E22EF15D40009CAD43 /* silero-vad-coreml in Resources */,
-				27F5661D2EE37FE3000662BE /* parakeet-tdt-0.6b-v3-coreml in Resources */,
 				275266902EE2996E007CA86C /* recstop.mp3 in Resources */,
 				2752669E2EE2996E007CA86C /* recstart.mp3 in Resources */,
 				275266AB2EE2996E007CA86C /* esc.wav in Resources */,
@@ -1003,7 +964,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.notescribe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1051,7 +1012,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.notescribe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1070,7 +1031,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1088,7 +1049,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1105,7 +1066,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -1122,7 +1083,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
