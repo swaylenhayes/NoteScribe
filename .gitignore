@@ -1,0 +1,28 @@
+# NoteScribe Root .gitignore
+
+# External models directory (large CoreML models, not committed to repo)
+models/
+_releases/
+archive/
+_branch-filler-words/
+.claude/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+DerivedData/
+*.xcresult
+*.xcuserstate
+xcuserdata/
+
+# Build artifacts (releases are managed separately)
+*.dmg
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
