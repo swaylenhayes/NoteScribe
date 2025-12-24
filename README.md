@@ -14,10 +14,11 @@ If you only need English, choose V2 since it has a slightly lower WER for Englis
 Both models are Core ML models optimized for Apple silicon. In practice, Parakeet V2/V3 Core ML runs among the fastest offline ASR options on Mac today. Compared to Whisper GGML (base / large-v3 / turbo), these models show minimal extra RAM overhead, similar CPU thread usage, and a clear shift of work to the Neural Engine, leaving the rest of the system more responsive.
 
 <img width="1400" height="1200" alt="benchmark_graph_paraCoreML_vs_whisperGGML_harvard100_swaylenhayes_12-10-2025" src="https://github.com/user-attachments/assets/f9957af1-d240-4fdd-a949-04a497a8338e" />
-Compared to GGML models, CoreML models are showing they use:
-~50% less RAM,
-~50% less energy draw,
-~30-40% less CPU load (at peak)
+
+Compared to GGML models, the CoreML models use:
+- ~50% less RAM,
+- ~50% less energy draw,
+- ~30-40% less CPU load (at peak)
 
 ## What it does
 
