@@ -118,4 +118,11 @@ class TranscriptionPrompt: ObservableObject {
         // Force update the UI
         objectWillChange.send()
     }
+
+    func replaceCustomPrompts(_ prompts: [String: String]?) {
+        customPrompts = prompts ?? [:]
+        saveCustomPrompts()
+        updateTranscriptionPrompt()
+        objectWillChange.send()
+    }
 }
