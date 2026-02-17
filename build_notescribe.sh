@@ -149,8 +149,12 @@ cleanup_models() {
     # For VAD - remove everything
     rm -rf "$VAD_DIR"/*
 
-    # Restore .gitkeep to maintain directory structure
+    # Restore placeholder directories so direct Xcode builds still resolve folder refs.
+    mkdir -p "$PARAKEET_DIR" "$VAD_DIR/silero-vad-coreml"
     touch "$BUNDLED_MODELS_DIR/.gitkeep"
+    touch "$PARAKEET_DIR/.gitkeep"
+    touch "$VAD_DIR/.gitkeep"
+    touch "$VAD_DIR/silero-vad-coreml/.gitkeep"
 
     echo "Cleanup complete - source tree restored to clean state."
 }
@@ -171,6 +175,12 @@ sign_app() {
     else
         codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$target"
     fi
+}
+
+sign_dmg() {
+    local target="$1"
+    # DMG containers should be signed as a distribution artifact before notarization.
+    codesign --force --timestamp --sign "$SIGNING_IDENTITY" "$target"
 }
 
 sign_embedded() {
@@ -197,6 +207,73 @@ sign_embedded() {
 }
 
 # ============================================================================
+# Package Compatibility Patch
+# ============================================================================
+
+resolve_derived_data_dir() {
+    local build_settings build_dir
+
+    build_settings=$(xcodebuild \
+        -project "$ROOT_DIR/NoteScribe.xcodeproj" \
+        -scheme "$SCHEME" \
+        -configuration "$CONFIG" \
+        -showBuildSettings)
+
+    build_dir=$(echo "$build_settings" | awk -F ' = ' '/ BUILD_DIR = / {print $2; exit}')
+    if [[ -z "$build_dir" ]]; then
+        echo ""
+        return
+    fi
+
+    echo "${build_dir%/Build/Products}"
+}
+
+patch_fluidaudio_qwen3_for_universal_build() {
+    local derived_data_dir qwen3_file
+
+    derived_data_dir="$(resolve_derived_data_dir)"
+    if [[ -z "$derived_data_dir" ]]; then
+        echo "Warning: Could not determine DerivedData path; skipping FluidAudio compatibility patch."
+        return
+    fi
+
+    qwen3_file="$derived_data_dir/SourcePackages/checkouts/FluidAudio/Sources/FluidAudio/ASR/Qwen3/Qwen3AsrModels.swift"
+
+    if [[ ! -f "$qwen3_file" ]]; then
+        echo "Resolving packages before compatibility patch..."
+        xcodebuild \
+            -project "$ROOT_DIR/NoteScribe.xcodeproj" \
+            -scheme "$SCHEME" \
+            -configuration "$CONFIG" \
+            -resolvePackageDependencies >/dev/null
+    fi
+
+    if [[ ! -f "$qwen3_file" ]]; then
+        echo "Warning: FluidAudio Qwen3 source file not found; skipping compatibility patch."
+        return
+    fi
+
+    if grep -q '#if arch(arm64)' "$qwen3_file"; then
+        echo "FluidAudio universal compatibility patch already present."
+        return
+    fi
+
+    if ! grep -q 'data.withUnsafeBytes { ptr in' "$qwen3_file"; then
+        echo "Warning: Unexpected FluidAudio source format; skipping compatibility patch."
+        return
+    fi
+
+    perl -0777 -i'' -pe 's@        data.withUnsafeBytes \{ ptr in\n            let f16Ptr = ptr.baseAddress!\.advanced\(by: offset\)\n                \.assumingMemoryBound\(to: Float16\.self\)\n\n            for i in 0\.\.<hiddenSize \{\n                result\[i\] = Float\(f16Ptr\[i\]\)\n            \}\n        \}@        #if arch(arm64)\n        data.withUnsafeBytes { ptr in\n            let f16Ptr = ptr.baseAddress!.advanced(by: offset)\n                .assumingMemoryBound(to: Float16.self)\n\n            for i in 0..<hiddenSize {\n                result[i] = Float(f16Ptr[i])\n            }\n        }\n        #else\n        // Float16 embedding decode requires Apple Silicon.\n        fatalError(\"Qwen3-ASR requires Apple Silicon (arm64)\")\n        #endif@g' "$qwen3_file"
+
+    if grep -q '#if arch(arm64)' "$qwen3_file"; then
+        echo "Applied FluidAudio universal compatibility patch."
+    else
+        echo "Error: Failed to apply FluidAudio universal compatibility patch." >&2
+        exit 1
+    fi
+}
+
+# ============================================================================
 # Build Function
 # ============================================================================
 
@@ -209,6 +286,9 @@ build_app() {
     # Set up trap to cleanup on exit (success or failure)
     trap cleanup_models EXIT
 
+    # Apply fallback compatibility patch for FluidAudio universal compilation.
+    patch_fluidaudio_qwen3_for_universal_build
+
     if [[ "$signed_flag" -eq 1 ]]; then
         if [[ -z "${SIGNING_IDENTITY:-}" ]]; then
             echo "Error: SIGNING_IDENTITY is required for --signed." >&2
@@ -219,6 +299,7 @@ build_app() {
             -project "$ROOT_DIR/NoteScribe.xcodeproj" \
             -scheme "$SCHEME" \
             -configuration "$CONFIG" \
+            -disableAutomaticPackageResolution \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build
@@ -228,6 +309,7 @@ build_app() {
             -project "$ROOT_DIR/NoteScribe.xcodeproj" \
             -scheme "$SCHEME" \
             -configuration "$CONFIG" \
+            -disableAutomaticPackageResolution \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             build
@@ -286,6 +368,12 @@ build_app() {
             -ov -format UDZO "$DMG_PATH"
         rm -rf "$DMG_SOURCE_DIR"
         echo "DMG created at: $DMG_PATH"
+
+        echo "Signing DMG..."
+        sign_dmg "$DMG_PATH"
+
+        echo "Verifying DMG signature..."
+        codesign --verify --verbose=2 "$DMG_PATH"
 
         if [[ "${NOTARIZE:-0}" -eq 1 ]]; then
             echo "Submitting DMG for notarization..."

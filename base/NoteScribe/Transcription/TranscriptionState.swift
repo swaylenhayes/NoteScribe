@@ -76,8 +76,8 @@ class TranscriptionState: NSObject, ObservableObject {
         self.modelsDirectory = appSupportDirectory.appendingPathComponent("Models")
         self.recordingsDirectory = appSupportDirectory.appendingPathComponent("Recordings")
 
-        // Models are initialized from bundle to Application Support on first launch
-        // See ModelInitializationService
+        // Models are copied from bundle to FluidAudio cache on demand.
+        // See ModelBundleManager.
         self.bundledModelsDirectory = nil
 
         super.init()
@@ -371,7 +371,7 @@ class TranscriptionState: NSObject, ObservableObject {
     // MARK: - v1.2 Stub Functions (Parakeet V3 only - no local Transcription models)
 
     func createModelsDirectoryIfNeeded() {
-        // v1.2: No longer needed - Parakeet models handled by ModelInitializationService
+        // v1.2: No longer needed - Parakeet models handled by ModelBundleManager
     }
 
     func loadAvailableModels() {

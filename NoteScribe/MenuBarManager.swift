@@ -38,7 +38,6 @@ class MenuBarManager: ObservableObject {
             let application = NSApplication.shared
             if self.isMenuBarOnly {
                 application.setActivationPolicy(.accessory)
-                WindowManager.shared.hideMainWindow()
             } else {
                 application.setActivationPolicy(.regular)
                 _ = WindowManager.shared.showMainWindow()

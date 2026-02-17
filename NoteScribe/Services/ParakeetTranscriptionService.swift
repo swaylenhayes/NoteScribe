@@ -5,22 +5,23 @@ import FluidAudio
 import os.log
 
 class ParakeetTranscriptionService: TranscriptionService {
-    private var asrManager: AsrManager?
+    private var asrManagers: [AsrModelVersion: AsrManager] = [:]
     private var vadManager: VadManager?
     private var activeVersion: AsrModelVersion?
     private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe.parakeet", category: "ParakeetTranscriptionService")
-    private var lastTimingLogDate = Date()
 
     private func version(for model: any TranscriptionModel) -> AsrModelVersion {
         model.name.lowercased().contains("v2") ? .v2 : .v3
     }
 
     private func ensureModelsLoaded(for version: AsrModelVersion) async throws {
-        if asrManager != nil, activeVersion == version {
+        if asrManagers[version] != nil {
+            activeVersion = version
             return
         }
 
-        cleanup()
+        // Ensure bundled models are in the FluidAudio cache before loading
+        try ModelBundleManager.ensureModelsAvailable()
 
         let mlConfig = MLModelConfiguration()
         mlConfig.computeUnits = .all
@@ -31,7 +32,7 @@ class ParakeetTranscriptionService: TranscriptionService {
             version: version
         )
         try await manager.initialize(models: models)
-        self.asrManager = manager
+        self.asrManagers[version] = manager
         self.activeVersion = version
     }
 
@@ -42,8 +43,9 @@ class ParakeetTranscriptionService: TranscriptionService {
     func transcribe(audioURL: URL, model: any TranscriptionModel, useVAD: Bool) async throws -> String {
         let targetVersion = version(for: model)
         try await ensureModelsLoaded(for: targetVersion)
+        activeVersion = targetVersion
 
-        guard let asrManager = asrManager else {
+        guard let asrManager = asrManagers[targetVersion] else {
             throw ASRError.notInitialized
         }
 
@@ -55,10 +57,10 @@ class ParakeetTranscriptionService: TranscriptionService {
 
         var speechAudio = audioSamples
         if durationSeconds >= 20.0, useVAD {
-            let vadConfig = VadConfig(defaultThreshold: 0.7)
             if vadManager == nil {
-                let vadModel = try VADModelManager.shared.loadModel()
-                vadManager = VadManager(config: vadConfig, vadModel: vadModel)
+                let vadStart = Date()
+                vadManager = try await VadManager(config: VadConfig(defaultThreshold: 0.7))
+                logger.notice("[perf] VadManager init: \(String(format: "%.2f", Date().timeIntervalSince(vadStart)))s")
             }
 
             if let vadManager {
@@ -75,7 +77,7 @@ class ParakeetTranscriptionService: TranscriptionService {
         }
 
         let asrStart = Date()
-        let result = try await asrManager.transcribe(speechAudio)
+        let result = try await asrManager.transcribe(speechAudio, source: .microphone)
         logger.notice("[perf] ASR transcribe: \(String(format: "%.2f", Date().timeIntervalSince(asrStart)))s")
 
         return result.text
@@ -102,8 +104,10 @@ class ParakeetTranscriptionService: TranscriptionService {
     }
 
     func cleanup() {
-        asrManager?.cleanup()
-        asrManager = nil
+        for manager in asrManagers.values {
+            manager.cleanup()
+        }
+        asrManagers.removeAll()
         vadManager = nil
         activeVersion = nil
     }

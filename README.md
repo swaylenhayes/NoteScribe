@@ -41,3 +41,8 @@ An uninstall helper script is included in this repo: `uninstall_notescribe.sh`.
 
 - macOS 14+
 - Apple silicon (M-series). Intel Macs are not supported.
+
+## Developer Notes
+
+- Build/sign/notarize commands: `/Users/swaylen/dev/NoteScribe/_docs/DEV_BUILD_COMMANDS.md`
+- Current implementation + release packaging status: `/Users/swaylen/dev/NoteScribe/_docs/CURRENT_STATE.md`

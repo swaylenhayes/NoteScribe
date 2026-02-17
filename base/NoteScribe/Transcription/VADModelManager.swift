@@ -44,7 +44,7 @@ class VADModelManager {
             modelURL = bundledURL
         } else {
             logger.error("VAD model not found in cache or bundle")
-            throw ModelInitializationError.bundleNotFound
+            throw ModelBundleManagerError.bundleNotFound
         }
 
         let configuration = MLModelConfiguration()

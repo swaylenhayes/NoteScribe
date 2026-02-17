@@ -6,6 +6,8 @@ class CursorPaster {
     private static let pasteRetryDelay: TimeInterval = 0.25
     private static let maxPasteRetries = 20
     private static let restoreDelay: TimeInterval = 0.9
+    private static let accessibilityPromptCooldown: TimeInterval = 30
+    private static var lastAccessibilityPromptDate: Date?
 
     static func pasteAtCursor(_ text: String) {
         let pasteboard = NSPasteboard.general
@@ -40,11 +42,12 @@ class CursorPaster {
         preserveTranscript: Bool,
         attempt: Int
     ) {
-        if !isAccessibilityTrusted(prompt: true) {
+        let shouldPromptAccessibility = (attempt == 0)
+        if !isAccessibilityTrusted(prompt: shouldPromptAccessibility) {
             if attempt == 0 {
                 Task { @MainActor in
                     NotificationManager.shared.showNotification(
-                        title: "Enable Accessibility to paste. Will retry…",
+                        title: "Enable Accessibility to paste, then retry.",
                         type: .info
                     )
                 }
@@ -76,8 +79,27 @@ class CursorPaster {
     }
 
     private static func isAccessibilityTrusted(prompt: Bool) -> Bool {
+        if AXIsProcessTrusted() {
+            return true
+        }
+
+        guard prompt, shouldPromptForAccessibility() else {
+            return false
+        }
+
         let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: prompt]
         return AXIsProcessTrustedWithOptions(options)
+    }
+
+    private static func shouldPromptForAccessibility() -> Bool {
+        let now = Date()
+        if let lastPrompt = lastAccessibilityPromptDate,
+           now.timeIntervalSince(lastPrompt) < accessibilityPromptCooldown {
+            return false
+        }
+
+        lastAccessibilityPromptDate = now
+        return true
     }
 
     private static func restoreClipboard(_ savedContents: [(NSPasteboard.PasteboardType, Data)]) {

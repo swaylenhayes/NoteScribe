@@ -79,6 +79,13 @@
             ReferencedContainer = "container:NoteScribe.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "NOTESCRIBE_MODELS_DIR"
+            value = "/Users/swaylen/dev/NoteScribe/models"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
