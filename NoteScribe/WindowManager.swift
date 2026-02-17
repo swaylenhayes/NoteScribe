@@ -7,6 +7,7 @@ class WindowManager: NSObject {
     private static let mainWindowIdentifier = NSUserInterfaceItemIdentifier("com.swaylenhayes.apps.notescribe.mainWindow")
     private static let onboardingWindowIdentifier = NSUserInterfaceItemIdentifier("com.swaylenhayes.apps.notescribe.onboardingWindow")
     private static let mainWindowAutosaveName = NSWindow.FrameAutosaveName("NoteScribeMainWindowFrame")
+    private static let defaultMainWindowWidth: CGFloat = 650
     
     private weak var mainWindow: NSWindow?
     private var didApplyInitialPlacement = false
@@ -33,7 +34,7 @@ class WindowManager: NSObject {
         window.level = .normal
         window.isOpaque = true
         window.isMovableByWindowBackground = false
-        window.minSize = NSSize(width: 0, height: 0)
+        window.minSize = NSSize(width: 650, height: 680)
         window.setFrameAutosaveName(Self.mainWindowAutosaveName)
         applyInitialPlacementIfNeeded(to: window)
         registerMainWindowIfNeeded(window)
@@ -99,6 +100,13 @@ class WindowManager: NSObject {
         // Attempt to restore previous frame if one exists; otherwise fall back to a centered placement
         if !window.setFrameUsingName(Self.mainWindowAutosaveName) {
             window.center()
+        }
+        var frame = window.frame
+        let targetWidth = max(Self.defaultMainWindowWidth, window.minSize.width)
+        if frame.width != targetWidth {
+            frame.origin.x += (frame.width - targetWidth) / 2
+            frame.size.width = targetWidth
+            window.setFrame(frame, display: true)
         }
         didApplyInitialPlacement = true
     }

@@ -5,7 +5,7 @@ import FluidAudio
 import os.log
 
 class ParakeetTranscriptionService: TranscriptionService {
-    private var asrManager: AsrManager?
+    private var asrManagers: [AsrModelVersion: AsrManager] = [:]
     private var vadManager: VadManager?
     private var activeVersion: AsrModelVersion?
     private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe.parakeet", category: "ParakeetTranscriptionService")
@@ -16,11 +16,12 @@ class ParakeetTranscriptionService: TranscriptionService {
     }
 
     private func ensureModelsLoaded(for version: AsrModelVersion) async throws {
-        if asrManager != nil, activeVersion == version {
+        if asrManagers[version] != nil {
+            activeVersion = version
             return
         }
 
-        cleanup()
+        try ModelBundleManager.ensureModelsAvailable()
 
         let mlConfig = MLModelConfiguration()
         mlConfig.computeUnits = .all
@@ -28,7 +29,7 @@ class ParakeetTranscriptionService: TranscriptionService {
         let manager = AsrManager(config: .default)
         let models = try await loadModelsOffline(version: version, configuration: mlConfig)
         try await manager.initialize(models: models)
-        self.asrManager = manager
+        self.asrManagers[version] = manager
         self.activeVersion = version
     }
 
@@ -39,8 +40,9 @@ class ParakeetTranscriptionService: TranscriptionService {
     func transcribe(audioURL: URL, model: any TranscriptionModel, useVAD: Bool) async throws -> String {
         let targetVersion = version(for: model)
         try await ensureModelsLoaded(for: targetVersion)
+        activeVersion = targetVersion
 
-        guard let asrManager = asrManager else {
+        guard let asrManager = asrManagers[targetVersion] else {
             throw ASRError.notInitialized
         }
 
@@ -177,8 +179,10 @@ class ParakeetTranscriptionService: TranscriptionService {
     }
 
     func cleanup() {
-        asrManager?.cleanup()
-        asrManager = nil
+        for manager in asrManagers.values {
+            manager.cleanup()
+        }
+        asrManagers.removeAll()
         vadManager = nil
         activeVersion = nil
     }

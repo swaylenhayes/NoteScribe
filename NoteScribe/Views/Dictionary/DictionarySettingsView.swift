@@ -5,49 +5,38 @@ struct DictionarySettingsView: View {
     
     var body: some View {
         ScrollView {
-            mainContent
+            VStack(spacing: 0) {
+                AppSectionHeader("Replacements") {
+                    HStack(spacing: 12) {
+                        Button(action: {
+                            DictionaryImportExportService.shared.importDictionary()
+                        }) {
+                            Image(systemName: "square.and.arrow.down")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.accentColor)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Import word replacements")
+
+                        Button(action: {
+                            DictionaryImportExportService.shared.exportDictionary()
+                        }) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.accentColor)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Export word replacements")
+                    }
+                    .frame(height: 20)
+                }
+
+                WordReplacementView()
+                    .padding(.horizontal, LayoutMetrics.horizontalInset)
+                    .padding(.vertical, LayoutMetrics.horizontalInset)
+            }
         }
         .frame(minWidth: 600, minHeight: 500)
-        .background(Color(NSColor.controlBackgroundColor))
-    }
-
-    private var mainContent: some View {
-        VStack(spacing: 20) {
-            HStack {
-                Text("Replacements")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-
-                Spacer()
-
-                HStack(spacing: 12) {
-                    Button(action: {
-                        DictionaryImportExportService.shared.importDictionary()
-                    }) {
-                        Image(systemName: "square.and.arrow.down")
-                            .font(.system(size: 18))
-                            .foregroundColor(.accentColor)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Import word replacements")
-
-                    Button(action: {
-                        DictionaryImportExportService.shared.exportDictionary()
-                    }) {
-                        Image(systemName: "square.and.arrow.up")
-                            .font(.system(size: 18))
-                            .foregroundColor(.accentColor)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Export word replacements")
-                }
-            }
-            
-
-            WordReplacementView()
-                .background(CardBackground(isSelected: false))
-        }
-        .padding(.horizontal, 32)
-        .padding(.vertical, 40)
+        .background(Color(NSColor.windowBackgroundColor))
     }
 } 

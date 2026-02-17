@@ -96,7 +96,7 @@
 		275267532EE2996E007CA86C /* AnimatedCopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266262EE2996E007CA86C /* AnimatedCopyButton.swift */; };
 		PARAKEET0000000000000001 /* Parakeet in Resources */ = {isa = PBXBuildFile; fileRef = PARAKEET0000000000000000 /* Parakeet */; };
 		2BAA90C1C871A90588961825 /* DictionaryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7AE540B935BEA0EDECE17F /* DictionaryItem.swift */; };
-		A500567D246E4AFAA32BA913 /* ModelInitializationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */; };
+		A500567D246E4AFAA32BA913 /* ModelBundleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA119C8A60BC4A9CB4D9F10C /* ModelBundleManager.swift */; };
 		A5679A55F846AEDD61870A4C /* Common/View+Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5679A55F846AEDD61870A4B /* Common/View+Placeholder.swift */; };
 		B0D39A1B2F11111100000002 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D39A1B2F11111100000001 /* PermissionManager.swift */; };
 		C876805DC9AE4EDE85EB29C6 /* TranscriptionState+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F15E2385FA4BACA1AE82AF /* TranscriptionState+UI.swift */; };
@@ -234,7 +234,7 @@
 		A5679A55F846AEDD61870A4B /* Common/View+Placeholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Common/View+Placeholder.swift"; sourceTree = "<group>"; };
 		B0D39A1B2F00000100000001 /* silero-vad-coreml */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "silero-vad-coreml"; path = "NoteScribe/Resources/BundledModels/VAD/silero-vad-coreml"; sourceTree = "<group>"; };
 		B0D39A1B2F11111100000001 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
-		CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelInitializationService.swift; sourceTree = "<group>"; };
+		CA119C8A60BC4A9CB4D9F10C /* ModelBundleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBundleManager.swift; sourceTree = "<group>"; };
 		E11473B02CBE0F0A00318EE4 /* NoteScribe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoteScribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11473C32CBE0F0B00318EE4 /* NoteScribeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoteScribeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11473CD2CBE0F0B00318EE4 /* NoteScribeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoteScribeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -327,7 +327,7 @@
 		2752661A2EE2996E007CA86C /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */,
+				CA119C8A60BC4A9CB4D9F10C /* ModelBundleManager.swift */,
 				275265FF2EE2996E007CA86C /* AudioDeviceConfiguration.swift */,
 				275266002EE2996E007CA86C /* AudioDeviceManager.swift */,
 				275266012EE2996E007CA86C /* AudioFileProcessor.swift */,
@@ -673,7 +673,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A500567D246E4AFAA32BA913 /* ModelInitializationService.swift in Sources */,
+				A500567D246E4AFAA32BA913 /* ModelBundleManager.swift in Sources */,
 				275266B02EE2996E007CA86C /* AppDelegate.swift in Sources */,
 				275266B12EE2996E007CA86C /* WindowManager.swift in Sources */,
 				275266B32EE2996E007CA86C /* AudioDeviceConfiguration.swift in Sources */,
@@ -931,7 +931,7 @@
 				CURRENT_PROJECT_VERSION = 101;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LVKMA4S3V6;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
@@ -979,7 +979,7 @@
 				CURRENT_PROJECT_VERSION = 101;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = LVKMA4S3V6;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
@@ -1130,8 +1130,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FluidInference/FluidAudio";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.8.0;
+				kind = revision;
+				revision = 99220bc49f085235998b9937172618399deb4412;
 			};
 		};
 		E1342C1D2EB4844800CED8A2 /* XCRemoteSwiftPackageReference "swift-atomics" */ = {

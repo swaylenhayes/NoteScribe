@@ -92,17 +92,17 @@ struct NoteScribeApp: App {
         _menuBarManager = StateObject(wrappedValue: menuBarManager)
         appDelegate.menuBarManager = menuBarManager
         
-        // Initialize bundled models on first launch, then pre-warm for instant transcription
+        // Ensure bundled models are in FluidAudio cache, then pre-warm for instant transcription
         Task {
-            let modelInitService = ModelInitializationService()
             do {
-                try await modelInitService.initializeModelsIfNeeded()
+                try ModelBundleManager.ensureModelsAvailable()
             } catch {
-                logger.error("Model initialization failed: \(error.localizedDescription)")
+                logger.error("Model bundle setup failed: \(error.localizedDescription)")
             }
 
-            // Pre-warm the CoreML model to eliminate cold start delay on first transcription
-            await transcriptionState.prewarmModel()
+            // Pre-warm selected model, then warm alternatives in background for instant model switching.
+            await transcriptionState.prewarmModel(showOverlay: false)
+            await transcriptionState.prewarmAlternativeModels(showOverlay: false)
         }
 
         // Ensure no lingering recording state from previous runs
@@ -237,16 +237,16 @@ struct NoteScribeApp: App {
         .commands {
             CommandGroup(replacing: .newItem) { }
             CommandMenu("Navigate") {
-                Button("NoteScribe") {
+                Button("Scratch Pad") {
                     NotificationCenter.default.post(
                         name: .navigateToDestination,
                         object: nil,
-                        userInfo: ["destination": "NoteScribe"]
+                        userInfo: ["destination": "Scratch Pad"]
                     )
                 }
                 .keyboardShortcut("1", modifiers: [.command])
 
-                Button("File Transcription") {
+                Button("Transcription") {
                     NotificationCenter.default.post(
                         name: .navigateToDestination,
                         object: nil,
@@ -255,15 +255,6 @@ struct NoteScribeApp: App {
                 }
                 .keyboardShortcut("2", modifiers: [.command])
 
-                Button("History") {
-                    NotificationCenter.default.post(
-                        name: .navigateToDestination,
-                        object: nil,
-                        userInfo: ["destination": "History"]
-                    )
-                }
-                .keyboardShortcut("3", modifiers: [.command])
-
                 Button("Replacements") {
                     NotificationCenter.default.post(
                         name: .navigateToDestination,
@@ -271,7 +262,7 @@ struct NoteScribeApp: App {
                         userInfo: ["destination": "Replacements"]
                     )
                 }
-                .keyboardShortcut("4", modifiers: [.command])
+                .keyboardShortcut("3", modifiers: [.command])
 
                 Button("Settings") {
                     NotificationCenter.default.post(
@@ -280,7 +271,7 @@ struct NoteScribeApp: App {
                         userInfo: ["destination": "Settings"]
                     )
                 }
-                .keyboardShortcut("5", modifiers: [.command])
+                .keyboardShortcut("4", modifiers: [.command])
             }
         }
         

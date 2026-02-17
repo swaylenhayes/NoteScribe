@@ -5,6 +5,8 @@ import KeyboardShortcuts
 
 @MainActor
 final class PermissionManager: ObservableObject {
+    private static var didRequestInitialPermissionsThisSession = false
+
     @Published var audioPermissionStatus = AVCaptureDevice.authorizationStatus(for: .audio)
     @Published var isAccessibilityEnabled = false
 
@@ -54,8 +56,12 @@ final class PermissionManager: ObservableObject {
     }
 
     static func requestInitialPermissions() {
+        guard !didRequestInitialPermissionsThisSession else { return }
+        didRequestInitialPermissionsThisSession = true
+
         let audioStatus = AVCaptureDevice.authorizationStatus(for: .audio)
-        let promptAccessibility = {
+        let promptAccessibilityIfNeeded = {
+            guard !AXIsProcessTrusted() else { return }
             let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
             _ = AXIsProcessTrustedWithOptions(options)
         }
@@ -63,11 +69,11 @@ final class PermissionManager: ObservableObject {
         if audioStatus == .notDetermined {
             AVCaptureDevice.requestAccess(for: .audio) { _ in
                 DispatchQueue.main.async {
-                    promptAccessibility()
+                    promptAccessibilityIfNeeded()
                 }
             }
         } else {
-            promptAccessibility()
+            promptAccessibilityIfNeeded()
         }
     }
 }

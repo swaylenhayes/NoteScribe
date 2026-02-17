@@ -21,8 +21,8 @@ struct MenuBarView: View {
                 Divider()
             }
 
-            Button("Open NoteScribe") {
-                menuBarManager.openMainWindowAndNavigate(to: "NoteScribe")
+            Button("Open Scratch Pad") {
+                menuBarManager.openMainWindowAndNavigate(to: "Scratch Pad")
             }
 
             Divider()
@@ -35,12 +35,8 @@ struct MenuBarView: View {
                 LastTranscriptionService.copyLastTranscription(from: transcriptionState.modelContext)
             }
 
-            Button("Open File Transcription") {
+            Button("Open Transcription") {
                 menuBarManager.openMainWindowAndNavigate(to: "Transcription")
-            }
-
-            Button("Open History") {
-                menuBarManager.openMainWindowAndNavigate(to: "History")
             }
 
             Button("Open Settings") {

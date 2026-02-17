@@ -10,9 +10,8 @@ private let isOfflineMode = false
 #endif
 
 enum TabDestination: String, CaseIterable, Identifiable {
-    case scratchpad = "NoteScribe"
-    case transcription = "File Transcription"
-    case history = "History"
+    case scratchpad = "Scratch Pad"
+    case transcription = "Transcription"
     case replacements = "Replacements"
     case settings = "Settings"
 
@@ -22,10 +21,60 @@ enum TabDestination: String, CaseIterable, Identifiable {
         switch self {
         case .scratchpad: return "square.and.pencil"
         case .transcription: return "waveform.circle.fill"
-        case .history: return "doc.text.fill"
         case .replacements: return "character.book.closed.fill"
         case .settings: return "gearshape.fill"
         }
+    }
+}
+
+enum LayoutMetrics {
+    static let horizontalInset: CGFloat = 24
+    static let sectionHeaderTop: CGFloat = 16
+    static let sectionHeaderBottom: CGFloat = 12
+    static let sectionHeaderRowHeight: CGFloat = 34
+    static let sectionGap: CGFloat = 16
+}
+
+struct AppSectionHeader<Accessory: View>: View {
+    private let title: String
+    private let accessory: Accessory
+
+    init(_ title: String, @ViewBuilder accessory: () -> Accessory) {
+        self.title = title
+        self.accessory = accessory()
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .center, spacing: 12) {
+                Text(title)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Spacer()
+                accessory
+            }
+            .frame(height: LayoutMetrics.sectionHeaderRowHeight, alignment: .center)
+            .padding(.horizontal, LayoutMetrics.horizontalInset)
+            .padding(.top, LayoutMetrics.sectionHeaderTop)
+            .padding(.bottom, LayoutMetrics.sectionHeaderBottom)
+
+            Divider()
+                .padding(.horizontal, LayoutMetrics.horizontalInset)
+        }
+    }
+}
+
+extension AppSectionHeader where Accessory == EmptyView {
+    init(_ title: String) {
+        self.init(title) { EmptyView() }
+    }
+}
+
+struct TranscriptionWorkspaceView: View {
+    var body: some View {
+        TranscriptionHistoryView(showsHeader: true, headerTitle: "Transcription")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(NSColor.windowBackgroundColor))
     }
 }
 
@@ -61,13 +110,7 @@ struct ModelLoadingOverlay: View {
                 // Animated brain/AI icon
                 Image(systemName: "brain")
                     .font(.system(size: 64))
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.blue, .purple, .pink],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .foregroundColor(.white)
                     .symbolEffect(.pulse, options: .repeating)
 
                 VStack(spacing: 12) {
@@ -111,21 +154,15 @@ struct ContentView: View {
             TabView(selection: $selectedTab) {
                 ScratchpadView()
                     .tabItem {
-                        Label("NoteScribe", systemImage: TabDestination.scratchpad.icon)
+                        Label(TabDestination.scratchpad.rawValue, systemImage: TabDestination.scratchpad.icon)
                     }
                     .tag(TabDestination.scratchpad)
 
-                AudioTranscribeView()
+                TranscriptionWorkspaceView()
                     .tabItem {
-                        Label("File Transcription", systemImage: TabDestination.transcription.icon)
+                        Label(TabDestination.transcription.rawValue, systemImage: TabDestination.transcription.icon)
                     }
                     .tag(TabDestination.transcription)
-
-                TranscriptionHistoryView()
-                    .tabItem {
-                        Label("History", systemImage: TabDestination.history.icon)
-                    }
-                    .tag(TabDestination.history)
 
                 DictionarySettingsView()
                     .tabItem {
@@ -146,19 +183,17 @@ struct ContentView: View {
                 ModelLoadingOverlay()
             }
         }
-        .frame(minWidth: 940, minHeight: 730)
+        .frame(minWidth: 650, minHeight: 730)
         // OFFLINE MODE: Removed NoteScribe Pro, Enhancement, Power Mode destinations
         .onReceive(NotificationCenter.default.publisher(for: .navigateToDestination)) { notification in
             if let destination = notification.userInfo?["destination"] as? String {
                 switch destination {
-                case "NoteScribe", "Home":
+                case "NoteScribe", "Scratch Pad", "Scratchpad", "Home":
                     selectedTab = .scratchpad
                 case "Settings":
                     selectedTab = .settings
-                case "Transcription", "Transcribe Audio":
+                case "Transcription", "File Transcription", "Transcribe Audio", "History":
                     selectedTab = .transcription
-                case "History":
-                    selectedTab = .history
                 case "Replacements":
                     selectedTab = .replacements
                 default:

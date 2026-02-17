@@ -14,11 +14,25 @@ struct TranscriptionCard: View {
     let onDelete: () -> Void
     let onToggleSelection: () -> Void
 
+    @Environment(\.colorScheme) private var colorScheme
     @State private var selectedTab: ContentTab = .original
+
+    private var normalizedOriginalText: String {
+        let value = transcription.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return value.isEmpty ? "No transcription text available." : value
+    }
+
+    private var normalizedEnhancedText: String? {
+        guard let value = transcription.enhancedText?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !value.isEmpty else {
+            return nil
+        }
+        return value
+    }
 
     private var availableTabs: [ContentTab] {
         var tabs: [ContentTab] = []
-        if transcription.enhancedText != nil {
+        if normalizedEnhancedText != nil {
             tabs.append(.enhanced)
         }
         tabs.append(.original)
@@ -40,9 +54,9 @@ struct TranscriptionCard: View {
     private var copyTextForCurrentTab: String {
         switch selectedTab {
         case .original:
-            return transcription.text
+            return normalizedOriginalText
         case .enhanced:
-            return transcription.enhancedText ?? transcription.text
+            return normalizedEnhancedText ?? normalizedOriginalText
         case .aiRequest:
             var result = ""
             if let systemMsg = transcription.aiRequestSystemMessage, !systemMsg.isEmpty {
@@ -54,12 +68,12 @@ struct TranscriptionCard: View {
                 }
                 result += userMsg
             }
-            return result.isEmpty ? transcription.text : result
+            return result.isEmpty ? normalizedOriginalText : result
         }
     }
 
     private var originalContentView: some View {
-        Text(transcription.text)
+        Text(normalizedOriginalText)
             .font(.system(size: 15, weight: .regular, design: .default))
             .lineSpacing(2)
             .textSelection(.enabled)
@@ -166,6 +180,7 @@ struct TranscriptionCard: View {
                         Spacer()
 
                         AnimatedCopyButton(textToCopy: copyTextForCurrentTab)
+                        AnimatedSaveButton(textToSave: copyTextForCurrentTab)
                     }
                     .padding(.vertical, 8)
                     .padding(.horizontal, 4)
@@ -176,8 +191,10 @@ struct TranscriptionCard: View {
                             case .original:
                                 originalContentView
                             case .enhanced:
-                                if let enhancedText = transcription.enhancedText {
+                                if let enhancedText = normalizedEnhancedText {
                                     enhancedContentView(enhancedText)
+                                } else {
+                                    originalContentView
                                 }
                             case .aiRequest:
                                 aiRequestContentView
@@ -229,7 +246,7 @@ struct TranscriptionCard: View {
                         }
                     }
                 } else {
-                    Text(transcription.enhancedText ?? transcription.text)
+                    Text(normalizedEnhancedText ?? normalizedOriginalText)
                         .font(.system(size: 15, weight: .regular, design: .default))
                         .lineLimit(2)
                         .lineSpacing(2)
@@ -237,11 +254,31 @@ struct TranscriptionCard: View {
             }
         }
         .padding(16)
-        .background(CardBackground(isSelected: false))
-        .cornerRadius(12)
+        .background(
+            Group {
+                if colorScheme == .dark {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(StyleConstants.inputInsetFill)
+                } else {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(StyleConstants.surfaceFill)
+                }
+            }
+        )
+        .overlay(
+            Group {
+                if colorScheme == .dark {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(StyleConstants.borderColor, lineWidth: 1)
+                } else {
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color(NSColor.separatorColor).opacity(0.32), lineWidth: 1)
+                }
+            }
+        )
         .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 2)
         .contextMenu {
-            if let enhancedText = transcription.enhancedText {
+            if let enhancedText = normalizedEnhancedText {
                 Button {
                     let _ = ClipboardManager.copyToClipboard(enhancedText)
                 } label: {
@@ -250,7 +287,7 @@ struct TranscriptionCard: View {
             }
 
             Button {
-                let _ = ClipboardManager.copyToClipboard(transcription.text)
+                let _ = ClipboardManager.copyToClipboard(normalizedOriginalText)
             } label: {
                 Label("Copy Original", systemImage: "doc.on.doc")
             }
@@ -263,7 +300,7 @@ struct TranscriptionCard: View {
         }
         .onChange(of: isExpanded) { oldValue, newValue in
             if newValue {
-                selectedTab = transcription.enhancedText != nil ? .enhanced : .original
+                selectedTab = normalizedEnhancedText != nil ? .enhanced : .original
             }
         }
     }

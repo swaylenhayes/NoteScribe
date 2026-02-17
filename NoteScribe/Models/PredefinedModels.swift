@@ -1,6 +1,12 @@
 import Foundation
  
- enum PredefinedModels {
+enum PredefinedModels {
+    private static let fileManager = FileManager.default
+    private static let parakeetModelCandidates: [(folderName: String, relativePath: String)] = [
+        ("parakeet-tdt-0.6b-v3-coreml", "parakeet-v3/parakeet-tdt-0.6b-v3-coreml"),
+        ("parakeet-tdt-0.6b-v2-coreml", "parakeet-v2/parakeet-tdt-0.6b-v2-coreml")
+    ]
+
     static func getLanguageDictionary(isMultilingual: Bool, provider: ModelProvider = .local) -> [String: String] {
         if !isMultilingual {
             return ["en": "English"]
@@ -14,53 +20,119 @@ import Foundation
         return detectedModels
     }
 
-    // Auto-detect bundled Parakeet model at runtime
+    // Auto-detect available Parakeet models at runtime
     private static var detectedModels: [any TranscriptionModel] {
-        guard let bundledModelName = detectBundledParakeetModel() else {
-            return []
-        }
+        let availableModelNames = Set(detectAvailableParakeetModels())
 
-        let isV3 = bundledModelName.contains("v3")
-        return [
-            ParakeetModel(
-                name: bundledModelName,
+        return parakeetModelCandidates.compactMap { candidate in
+            let normalizedName = candidate.folderName.replacingOccurrences(of: "-coreml", with: "")
+            guard availableModelNames.contains(normalizedName) else { return nil }
+
+            let isV3 = normalizedName.contains("v3")
+            return ParakeetModel(
+                name: normalizedName,
                 displayName: isV3 ? "Parakeet V3 CoreML" : "Parakeet V2 CoreML",
                 description: isV3
                     ? "NVIDIA's Parakeet V3 model (CoreML) (English and 25 European languages)."
                     : "NVIDIA's Parakeet V2 model (CoreML) (English only).",
                 size: "483 MB",
-                speed: 0.99,
-                accuracy: 0.94,
+                speed: isV3 ? 0.99 : 1.0,
+                accuracy: isV3 ? 0.94 : 0.92,
                 ramUsage: 0.8,
                 supportedLanguages: getLanguageDictionary(isMultilingual: isV3, provider: .parakeet)
             )
-        ]
+        }
     }
 
-    /// Scans app bundle for a Parakeet model folder and returns the model name
-    private static func detectBundledParakeetModel() -> String? {
-        guard let resourcePath = Bundle.main.resourcePath else { return nil }
-        let resourceURL = URL(fileURLWithPath: resourcePath)
+    /// Scans app bundle first, then local dev models directory, for all available Parakeet model folders.
+    private static func detectAvailableParakeetModels() -> [String] {
+        var bundledModels: [String] = []
 
-        let modelNames = ["parakeet-tdt-0.6b-v3-coreml", "parakeet-tdt-0.6b-v2-coreml"]
+        if let resourcePath = Bundle.main.resourcePath {
+            bundledModels = detectBundledParakeetModels(in: URL(fileURLWithPath: resourcePath))
+        }
 
-        // Check all possible paths where models might be located
+        let chosenModels: [String]
+        if !bundledModels.isEmpty {
+            chosenModels = bundledModels
+        } else {
+            chosenModels = detectDeveloperParakeetModels()
+        }
+
+        return chosenModels.map { $0.replacingOccurrences(of: "-coreml", with: "") }
+    }
+
+    private static func detectBundledParakeetModels(in resourcesDir: URL) -> [String] {
         let searchPaths = [
-            "Parakeet",                    // New unified build: Resources/Parakeet/
-            "",                            // Direct in Resources/
-            "BundledModels/Parakeet"       // Legacy nested path
+            "Parakeet",
+            "",
+            "BundledModels/Parakeet"
         ]
 
-        for searchPath in searchPaths {
-            let basePath = searchPath.isEmpty ? resourceURL : resourceURL.appendingPathComponent(searchPath)
-            for modelName in modelNames {
-                let modelPath = basePath.appendingPathComponent(modelName).path
-                if FileManager.default.fileExists(atPath: modelPath) {
-                    // Return name without -coreml suffix
-                    return modelName.replacingOccurrences(of: "-coreml", with: "")
+        return parakeetModelCandidates.compactMap { candidate in
+            for searchPath in searchPaths {
+                let basePath = searchPath.isEmpty ? resourcesDir : resourcesDir.appendingPathComponent(searchPath)
+                let modelPath = basePath.appendingPathComponent(candidate.folderName, isDirectory: true)
+                if hasRequiredParakeetFiles(at: modelPath) {
+                    return candidate.folderName
                 }
             }
+            return nil
         }
+    }
+
+    private static func detectDeveloperParakeetModels() -> [String] {
+        guard let modelsDir = developerModelsDirectory else { return [] }
+
+        return parakeetModelCandidates.compactMap { candidate in
+            let modelPath = modelsDir.appendingPathComponent(candidate.relativePath, isDirectory: true)
+            return hasRequiredParakeetFiles(at: modelPath) ? candidate.folderName : nil
+        }
+    }
+
+    private static func hasRequiredParakeetFiles(at modelPath: URL) -> Bool {
+        let requiredDirectories = [
+            "Encoder.mlmodelc",
+            "Decoder.mlmodelc",
+            "JointDecision.mlmodelc",
+            "Preprocessor.mlmodelc"
+        ]
+        let hasCoreModels = requiredDirectories.allSatisfy {
+            fileManager.fileExists(atPath: modelPath.appendingPathComponent($0, isDirectory: true).path)
+        }
+
+        let vocabFiles = ["parakeet_v3_vocab.json", "parakeet_vocab.json"]
+        let hasVocab = vocabFiles.contains {
+            fileManager.fileExists(atPath: modelPath.appendingPathComponent($0).path)
+        }
+
+        return hasCoreModels && hasVocab
+    }
+
+    private static var developerModelsDirectory: URL? {
+        if let configuredPath = ProcessInfo.processInfo.environment["NOTESCRIBE_MODELS_DIR"],
+           !configuredPath.isEmpty {
+            let configuredURL = URL(fileURLWithPath: configuredPath, isDirectory: true)
+            if fileManager.fileExists(atPath: configuredURL.path) {
+                return configuredURL
+            }
+        }
+
+        #if DEBUG
+        var current = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+        for _ in 0..<8 {
+            let candidate = current.appendingPathComponent("models", isDirectory: true)
+            if fileManager.fileExists(atPath: candidate.path) {
+                return candidate
+            }
+
+            let parent = current.deletingLastPathComponent()
+            if parent.path == current.path {
+                break
+            }
+            current = parent
+        }
+        #endif
 
         return nil
     }

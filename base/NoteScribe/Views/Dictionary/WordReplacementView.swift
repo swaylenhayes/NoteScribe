@@ -20,8 +20,7 @@ enum SortColumn {
 }
 
 class WordReplacementManager: ObservableObject {
-    private let seedKey = "wordReplacementsSeededV1"
-    private let fillerWords: [String] = [
+    private static let defaultFillerWords: [String] = [
         "um", "uh", "er", "ah", "eh", "umm", "uhh", "err", "ahh", "ehh", "hmm", "hm", "mm", "mmm", "erm", "urm", "ugh"
     ]
     @Published var replacements: [String: String] {
@@ -32,12 +31,26 @@ class WordReplacementManager: ObservableObject {
 
     init() {
         var stored = UserDefaults.standard.dictionary(forKey: "wordReplacements") as? [String: String] ?? [:]
-        let alreadySeeded = UserDefaults.standard.bool(forKey: seedKey)
-        if stored.isEmpty && !alreadySeeded {
-            fillerWords.forEach { stored[$0] = "" }
-            UserDefaults.standard.set(true, forKey: seedKey)
+        if Self.ensureDefaultFillers(in: &stored) {
+            UserDefaults.standard.set(stored, forKey: "wordReplacements")
         }
         self.replacements = stored
+    }
+
+    func ensureDefaultFillersPresent() {
+        var updated = replacements
+        if Self.ensureDefaultFillers(in: &updated) {
+            replacements = updated
+        }
+    }
+
+    private static func ensureDefaultFillers(in replacements: inout [String: String]) -> Bool {
+        var didAdd = false
+        for fillerWord in defaultFillerWords where replacements[fillerWord] == nil {
+            replacements[fillerWord] = ""
+            didAdd = true
+        }
+        return didAdd
     }
     
     func addReplacement(original: String, replacement: String) {
@@ -102,19 +115,7 @@ struct WordReplacementView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            GroupBox {
-                Label {
-                    Text("Define word replacements to automatically replace specific words or phrases")
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                } icon: {
-                    Image(systemName: "info.circle.fill")
-                        .foregroundColor(.accentColor)
-                }
-            }
-            
+        VStack(alignment: .leading, spacing: 12) {
             VStack(spacing: 0) {
                 HStack(spacing: 16) {
                     Button(action: { toggleSort(for: .original) }) {
@@ -195,13 +196,16 @@ struct WordReplacementView: View {
                 }
             }
         }
-        .padding()
+        .padding(16)
         .sheet(isPresented: $showAddReplacementModal) {
             AddReplacementSheet(manager: manager)
         }
         // Edit existing replacement
         .sheet(item: $editingOriginal) { original in
             EditReplacementSheet(manager: manager, originalKey: original.id)
+        }
+        .onAppear {
+            manager.ensureDefaultFillersPresent()
         }
         
     }

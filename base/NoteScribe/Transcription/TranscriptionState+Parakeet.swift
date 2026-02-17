@@ -23,7 +23,7 @@ extension TranscriptionState {
     }
 
     func isParakeetModelDownloaded(named modelName: String) -> Bool {
-        // v1.2: Check FluidAudio cache directory (where ModelInitializationService copies models)
+        // v1.2: Check FluidAudio cache directory (where ModelBundleManager copies models)
         let version = parakeetVersion(for: modelName)
         let cacheDir = parakeetCacheDirectory(for: version)
         let modelPath = cacheDir.appendingPathComponent("\(modelName)-coreml")

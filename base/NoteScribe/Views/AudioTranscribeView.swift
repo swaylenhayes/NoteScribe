@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 import AVFoundation
 
 struct AudioTranscribeView: View {
+    let showsHeader: Bool
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var transcriptionState: TranscriptionState
     @StateObject private var transcriptionManager = AudioTranscriptionManager.shared
@@ -12,6 +13,10 @@ struct AudioTranscribeView: View {
     @State private var isAudioFileSelected = false
     @State private var isEnhancementEnabled = false
     @State private var selectedPromptId: UUID?
+
+    init(showsHeader: Bool = true) {
+        self.showsHeader = showsHeader
+    }
     
     var body: some View {
         ZStack {
@@ -19,6 +24,10 @@ struct AudioTranscribeView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
+                if showsHeader {
+                    AppSectionHeader("Transcription")
+                }
+
                 if transcriptionManager.isProcessing {
                     processingView
                 } else {

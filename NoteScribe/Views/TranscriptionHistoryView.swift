@@ -1,13 +1,20 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct TranscriptionHistoryView: View {
+    let showsHeader: Bool
+    let headerTitle: String
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var transcriptionState: TranscriptionState
     @State private var searchText = ""
     @State private var expandedTranscription: Transcription?
     @State private var selectedTranscriptions: Set<Transcription> = []
     @State private var showDeleteConfirmation = false
     @State private var isViewCurrentlyVisible = false
+    @StateObject private var transcriptionManager = AudioTranscriptionManager.shared
+    @State private var isDropTargeted = false
     
     private let exportService = NoteScribeCSVExportService()
     
@@ -21,6 +28,11 @@ struct TranscriptionHistoryView: View {
     private let pageSize = 20
     
     @Query(Self.createLatestTranscriptionIndicatorDescriptor()) private var latestTranscriptionIndicator: [Transcription]
+
+    init(showsHeader: Bool = true, headerTitle: String = "History") {
+        self.showsHeader = showsHeader
+        self.headerTitle = headerTitle
+    }
     
     // Static function to create the FetchDescriptor for the latest transcription indicator
     private static func createLatestTranscriptionIndicatorDescriptor() -> FetchDescriptor<Transcription> {
@@ -64,6 +76,9 @@ struct TranscriptionHistoryView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
+                if showsHeader {
+                    transcriptionHeader
+                }
                 searchBar
                 
                 if displayedTranscriptions.isEmpty && !isLoading {
@@ -116,7 +131,7 @@ struct TranscriptionHistoryView: View {
                                 }
                             }
                             .animation(.easeInOut(duration: 0.3), value: expandedTranscription)
-                            .padding(24)
+                            .padding(LayoutMetrics.horizontalInset)
                             // Add bottom padding to ensure content is not hidden by the toolbar when visible
                             .padding(.bottom, !selectedTranscriptions.isEmpty ? 60 : 0)
                         }
@@ -129,7 +144,7 @@ struct TranscriptionHistoryView: View {
                     }
                 }
             }
-            .background(Color(NSColor.controlBackgroundColor))
+            .background(Color(NSColor.windowBackgroundColor))
             
             // Selection toolbar as an overlay
             if !selectedTranscriptions.isEmpty {
@@ -161,6 +176,18 @@ struct TranscriptionHistoryView: View {
                 await loadInitialContent()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .openFileForTranscription)) { notification in
+            if let url = notification.userInfo?["url"] as? URL {
+                startProcessingIfValidAudioFile(url)
+            }
+        }
+        .onDrop(of: [.fileURL, .data, .audio, .movie], isTargeted: $isDropTargeted) { providers in
+            if !transcriptionManager.isProcessing {
+                handleDroppedFile(providers)
+                return true
+            }
+            return false
+        }
         // Improved change detection for new transcriptions
         .onChange(of: latestTranscriptionIndicator.first?.id) { oldId, newId in
             guard isViewCurrentlyVisible else { return } // Only proceed if the view is visible
@@ -184,6 +211,34 @@ struct TranscriptionHistoryView: View {
             }
         }
     }
+
+    private var transcriptionHeader: some View {
+        AppSectionHeader(headerTitle) {
+            HStack(spacing: 10) {
+                Text(headerDropMessage)
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Button("Choose File") {
+                    selectFileAndStartProcessing()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(transcriptionManager.isProcessing)
+            }
+        }
+    }
+
+    private var headerDropMessage: String {
+        if transcriptionManager.isProcessing {
+            return transcriptionManager.processingPhase.message
+        }
+        if isDropTargeted {
+            return "Release to import file"
+        }
+        return "Drop audio or video files here or"
+    }
     
     private var searchBar: some View {
         HStack {
@@ -194,11 +249,33 @@ struct TranscriptionHistoryView: View {
                 .textFieldStyle(PlainTextFieldStyle())
         }
         .padding(12)
-        .background(CardBackground(isSelected: false))
-        .padding(.horizontal, 24)
-        .padding(.vertical, 16)
+        .background(
+            Group {
+                if colorScheme == .dark {
+                    RoundedRectangle(cornerRadius: StyleConstants.cornerRadius)
+                        .fill(StyleConstants.inputInsetFill)
+                } else {
+                    RoundedRectangle(cornerRadius: StyleConstants.cornerRadius)
+                        .fill(StyleConstants.surfaceFill)
+                }
+            }
+        )
+        .overlay(
+            Group {
+                if colorScheme == .dark {
+                    RoundedRectangle(cornerRadius: StyleConstants.cornerRadius)
+                        .stroke(StyleConstants.borderColor, lineWidth: 1)
+                } else {
+                    RoundedRectangle(cornerRadius: StyleConstants.cornerRadius)
+                        .stroke(Color(NSColor.separatorColor).opacity(0.32), lineWidth: 1)
+                }
+            }
+        )
+        .padding(.horizontal, LayoutMetrics.horizontalInset)
+        .padding(.top, LayoutMetrics.sectionGap)
+        .padding(.bottom, 10)
     }
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 20) {
             Image(systemName: "doc.text.magnifyingglass")
@@ -212,7 +289,7 @@ struct TranscriptionHistoryView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(CardBackground(isSelected: false))
-        .padding(24)
+        .padding(LayoutMetrics.horizontalInset)
     }
     
     private var selectionToolbar: some View {
@@ -368,6 +445,73 @@ struct TranscriptionHistoryView: View {
         } else {
             selectedTranscriptions.insert(transcription)
         }
+    }
+
+    private func selectFileAndStartProcessing() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [.audio, .movie]
+
+        if panel.runModal() == .OK, let url = panel.url {
+            startProcessingIfValidAudioFile(url)
+        }
+    }
+
+    private func handleDroppedFile(_ providers: [NSItemProvider]) {
+        guard let provider = providers.first else { return }
+
+        let typeIdentifiers = [
+            UTType.fileURL.identifier,
+            UTType.audio.identifier,
+            UTType.movie.identifier,
+            UTType.data.identifier,
+            "public.file-url"
+        ]
+
+        for typeIdentifier in typeIdentifiers {
+            if provider.hasItemConformingToTypeIdentifier(typeIdentifier) {
+                provider.loadItem(forTypeIdentifier: typeIdentifier, options: nil) { item, error in
+                    if let error {
+                        print("Error loading dropped file with type \(typeIdentifier): \(error)")
+                        return
+                    }
+
+                    var fileURL: URL?
+                    if let url = item as? URL {
+                        fileURL = url
+                    } else if let data = item as? Data {
+                        if let url = URL(dataRepresentation: data, relativeTo: nil) {
+                            fileURL = url
+                        } else if let urlString = String(data: data, encoding: .utf8),
+                                  let url = URL(string: urlString) {
+                            fileURL = url
+                        }
+                    } else if let urlString = item as? String {
+                        fileURL = URL(string: urlString)
+                    }
+
+                    if let finalURL = fileURL {
+                        DispatchQueue.main.async {
+                            self.startProcessingIfValidAudioFile(finalURL)
+                        }
+                    }
+                }
+                break
+            }
+        }
+    }
+
+    private func startProcessingIfValidAudioFile(_ url: URL) {
+        guard !transcriptionManager.isProcessing else { return }
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        guard SupportedMedia.isSupported(url: url) else { return }
+        transcriptionManager.startProcessing(
+            url: url,
+            modelContext: modelContext,
+            transcriptionState: transcriptionState
+        )
     }
     
     // Modified function to select all transcriptions in the database
