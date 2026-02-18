@@ -25,11 +25,6 @@ class NotificationManager {
             notificationWindow = nil
         }
         
-        // Play esc sound for error notifications
-        if type == .error {
-            SoundManager.shared.playEscSound()
-        }
-        
         let notificationView = AppNotificationView(
             title: title,
             type: type,

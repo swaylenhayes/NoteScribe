@@ -3,6 +3,11 @@
 ## Overview
 The unified build script handles everything: build, sign, notarize, staple, and validate.
 
+## Current Release Target
+- Version: `1.3.3`
+- Build: `102`
+- Scope: sound cue refresh + ESC/stop cue separation fix
+
 ## Prereqs (one-time)
 ```bash
 # Store notarization credentials in Keychain
@@ -219,6 +224,12 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg"
 spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
 ```
+
+### v1.3.3 Micro Release Notes
+- Updated bundled sounds for start/stop/paste/escape feedback.
+- Fixed unintended Escape cue during stop/finalize flow.
+- Removed Escape cue from notification error path.
+- Kept stop cue behavior deterministic during normal recording completion.
 
 ### Verified on Feb 16, 2026
 All of the following completed successfully on local machine:

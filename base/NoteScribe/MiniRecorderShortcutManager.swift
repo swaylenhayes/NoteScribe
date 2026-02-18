@@ -31,7 +31,12 @@ class MiniRecorderShortcutManager: ObservableObject {
     }
 
     @objc private func settingsDidChange() {
-        // OFFLINE MODE: Removed enhancement settings handling
+        // Keep escape-cancel shortcut in sync when recording hotkeys change.
+        Task { @MainActor in
+            guard transcriptionState.isMiniRecorderVisible else { return }
+            deactivateEscapeShortcut()
+            activateEscapeShortcut()
+        }
     }
 
     private func setupVisibilityObserver() {
@@ -63,6 +68,8 @@ class MiniRecorderShortcutManager: ObservableObject {
                 
                 // Don't process if custom shortcut is configured
                 guard KeyboardShortcuts.getShortcut(for: .cancelRecorder) == nil else { return }
+                // Don't process if Escape is used as a recording toggle hotkey.
+                guard !self.isEscapeReservedForRecordingToggle() else { return }
                 
                 let now = Date()
                 if let firstTime = self.escFirstPressTime,
@@ -91,7 +98,17 @@ class MiniRecorderShortcutManager: ObservableObject {
     private func activateEscapeShortcut() {
         // Don't activate if custom shortcut is configured
         guard KeyboardShortcuts.getShortcut(for: .cancelRecorder) == nil else { return }
+        // Don't activate if Escape is used as a recording toggle hotkey.
+        guard !isEscapeReservedForRecordingToggle() else { return }
         KeyboardShortcuts.setShortcut(.init(.escape), for: .escapeRecorder)
+    }
+
+    private func isEscapeReservedForRecordingToggle() -> Bool {
+        let recordingShortcuts = [
+            KeyboardShortcuts.getShortcut(for: .toggleRecording),
+            KeyboardShortcuts.getShortcut(for: .toggleRecording2)
+        ]
+        return recordingShortcuts.contains { $0?.key == .escape }
     }
     
     // Setup cancel handler once

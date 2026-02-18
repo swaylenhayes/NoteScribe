@@ -22,7 +22,8 @@ extension TranscriptionState {
             if recordingState == .recording {
                 await toggleRecord()
             } else {
-                await cancelRecording()
+                // Toggle-driven dismissal should not emit the ESC cancel cue.
+                await cancelRecording(playEscCue: false)
             }
         } else {
             SoundManager.shared.playStartSound()
@@ -78,8 +79,10 @@ extension TranscriptionState {
         // v1.2: Parakeet V3 - no model cleanup needed
     }
     
-    func cancelRecording() async {
-        SoundManager.shared.playEscSound()
+    func cancelRecording(playEscCue: Bool = true) async {
+        if playEscCue {
+            SoundManager.shared.playEscSound()
+        }
         shouldCancelRecording = true
         await cancelRecordingUI()
     }
