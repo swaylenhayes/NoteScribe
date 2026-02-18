@@ -169,7 +169,7 @@ class TranscriptionState: NSObject, ObservableObject {
                         } catch {
                             self.logger.error("❌ Failed to start recording: \(error.localizedDescription)")
                             NotificationManager.shared.showNotification(title: "Recording failed to start", type: .error)
-                            await self.cancelRecording()
+                            await self.cancelRecording(playEscCue: false)
                             // Do not remove the file on a failed start, to preserve all recordings.
                             self.recordedFile = nil
                         }
@@ -322,7 +322,7 @@ class TranscriptionState: NSObject, ObservableObject {
 
         // OFFLINE MODE: Removed prompt detection restore
 
-        await self.cancelRecording()
+        await self.cancelRecordingUI()
 
         shouldCancelRecording = false
     }
