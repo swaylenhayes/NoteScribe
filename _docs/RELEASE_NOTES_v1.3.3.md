@@ -1,6 +1,7 @@
 # NoteScribe v1.3.3 Release Notes
 
 **Release Date:** February 18, 2026
+**Release Update:** February 21, 2026 (combined V2+V3 bundle added)
 
 ## Highlights
 - Refreshed recording and interaction sounds for a cleaner, more distinct audible workflow.
@@ -24,6 +25,12 @@
 - Signed, notarized, stapled, and validated DMG artifacts produced for:
   - `NoteScribe-v2.dmg`
   - `NoteScribe-v3.dmg`
+  - `NoteScribe-v2v3.dmg` (combined payload with both Parakeet V2 and V3 in one app)
+
+## Combined Bundle
+- `NoteScribe-v2v3.dmg` includes both Parakeet V2 and Parakeet V3 model folders in the app bundle.
+- This enables model switching in Settings without installing a separate build.
+- Download size is larger than the single-model variants.
 
 ## Requirements
 - macOS 14+

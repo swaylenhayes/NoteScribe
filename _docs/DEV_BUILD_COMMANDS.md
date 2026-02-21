@@ -34,6 +34,9 @@ export NOTARY_PROFILE="your-notary-profile"
 
 # v3 - Multilingual
 ./build_notescribe.sh --model v3
+
+# v2+v3 - Combined payload (larger download)
+./build_notescribe.sh --model both
 ```
 **Does:** Build only (no signing, no DMG, no notarization)
 
@@ -46,6 +49,9 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model v2 --signed
 
 # v3
 SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model v3 --signed
+
+# v2+v3 combined
+SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model both --signed
 ```
 **Does:** Build → Sign → Create DMG
 
@@ -60,6 +66,10 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 # v3 - Full pipeline
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
   ./build_notescribe.sh --model v3 --signed
+
+# v2+v3 combined - Full pipeline
+SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
+  ./build_notescribe.sh --model both --signed
 ```
 **Does:** Build → Sign → Create DMG → Upload to Apple → Wait → Staple → Validate
 
@@ -80,6 +90,8 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 - v2 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg`
 - v3 app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3/NoteScribe.app`
 - v3 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg`
+- v2+v3 combined app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3/NoteScribe.app`
+- v2+v3 combined DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg`
 
 ---
 
