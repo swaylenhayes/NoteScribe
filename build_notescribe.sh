@@ -4,8 +4,8 @@ set -euo pipefail
 # ============================================================================
 # NoteScribe Unified Build Script
 # ============================================================================
-# Builds NoteScribe with specified model version (v2 or v3)
-# Usage: ./build_notescribe.sh --model v2|v3 [--signed|--unsigned]
+# Builds NoteScribe with specified model payload (v2, v3, or both)
+# Usage: ./build_notescribe.sh --model v2|v3|both [--signed|--unsigned]
 #
 # Environment variables:
 #   SIGNING_IDENTITY - Required for --signed (e.g., "Developer ID Application: ...")
@@ -30,10 +30,10 @@ MODEL_VERSION=""
 SIGNED=0
 
 print_usage() {
-    echo "Usage: $0 --model v2|v3 [--signed|--unsigned]"
+    echo "Usage: $0 --model v2|v3|both [--signed|--unsigned]"
     echo ""
     echo "Options:"
-    echo "  --model v2|v3    Select model version (required)"
+    echo "  --model v2|v3|both    Select model payload (required)"
     echo "  --signed         Sign and create DMG (requires SIGNING_IDENTITY)"
     echo "  --unsigned       Build without signing (default)"
     echo ""
@@ -79,25 +79,44 @@ if [[ -z "$MODEL_VERSION" ]]; then
     exit 1
 fi
 
-if [[ "$MODEL_VERSION" != "v2" && "$MODEL_VERSION" != "v3" ]]; then
-    echo "Error: --model must be 'v2' or 'v3'" >&2
+if [[ "$MODEL_VERSION" != "v2" && "$MODEL_VERSION" != "v3" && "$MODEL_VERSION" != "both" ]]; then
+    echo "Error: --model must be 'v2', 'v3', or 'both'" >&2
     exit 1
 fi
 
 # Set paths based on model version
-MODEL_NAME="parakeet-tdt-0.6b-${MODEL_VERSION}-coreml"
-MODEL_SOURCE_DIR="$MODELS_DIR/parakeet-${MODEL_VERSION}/$MODEL_NAME"
+V2_MODEL_NAME="parakeet-tdt-0.6b-v2-coreml"
+V3_MODEL_NAME="parakeet-tdt-0.6b-v3-coreml"
+V2_MODEL_SOURCE_DIR="$MODELS_DIR/parakeet-v2/$V2_MODEL_NAME"
+V3_MODEL_SOURCE_DIR="$MODELS_DIR/parakeet-v3/$V3_MODEL_NAME"
 VAD_SOURCE_DIR="$MODELS_DIR/vad/silero-vad-coreml"
 
-EXPORT_PATH="$RELEASES_DIR/NoteScribe-${MODEL_VERSION}"
-DMG_PATH="$RELEASES_DIR/NoteScribe-${MODEL_VERSION}.dmg"
+MODEL_SLUG="$MODEL_VERSION"
+if [[ "$MODEL_VERSION" == "both" ]]; then
+    MODEL_SLUG="v2v3"
+fi
+
+EXPORT_PATH="$RELEASES_DIR/NoteScribe-${MODEL_SLUG}"
+DMG_PATH="$RELEASES_DIR/NoteScribe-${MODEL_SLUG}.dmg"
 ENTITLEMENTS_PATH="$ROOT_DIR/NoteScribe/NoteScribe.entitlements.release.plist"
 
 # Validate model exists
-if [[ ! -d "$MODEL_SOURCE_DIR" ]]; then
-    echo "Error: Model not found at: $MODEL_SOURCE_DIR" >&2
-    echo "Please ensure the models directory is set up correctly." >&2
-    exit 1
+if [[ "$MODEL_VERSION" == "both" ]]; then
+    if [[ ! -d "$V2_MODEL_SOURCE_DIR" || ! -d "$V3_MODEL_SOURCE_DIR" ]]; then
+        echo "Error: Both V2 and V3 models are required for --model both." >&2
+        echo "Missing one of:" >&2
+        echo "  $V2_MODEL_SOURCE_DIR" >&2
+        echo "  $V3_MODEL_SOURCE_DIR" >&2
+        exit 1
+    fi
+else
+    MODEL_NAME="parakeet-tdt-0.6b-${MODEL_VERSION}-coreml"
+    MODEL_SOURCE_DIR="$MODELS_DIR/parakeet-${MODEL_VERSION}/$MODEL_NAME"
+    if [[ ! -d "$MODEL_SOURCE_DIR" ]]; then
+        echo "Error: Model not found at: $MODEL_SOURCE_DIR" >&2
+        echo "Please ensure the models directory is set up correctly." >&2
+        exit 1
+    fi
 fi
 
 if [[ ! -d "$VAD_SOURCE_DIR" ]]; then
@@ -108,7 +127,13 @@ fi
 echo "============================================"
 echo "NoteScribe Build - Model: $MODEL_VERSION"
 echo "============================================"
-echo "Model source: $MODEL_SOURCE_DIR"
+if [[ "$MODEL_VERSION" == "both" ]]; then
+    echo "Model sources:"
+    echo "  - $V2_MODEL_SOURCE_DIR"
+    echo "  - $V3_MODEL_SOURCE_DIR"
+else
+    echo "Model source: $MODEL_SOURCE_DIR"
+fi
 echo "Output: $EXPORT_PATH"
 echo ""
 
@@ -125,9 +150,16 @@ copy_models() {
     echo "  Clearing existing Parakeet models..."
     rm -rf "$PARAKEET_DIR"/*
 
-    # Copy selected Parakeet model
-    echo "  Copying $MODEL_NAME..."
-    cp -R "$MODEL_SOURCE_DIR" "$PARAKEET_DIR/"
+    # Copy selected Parakeet model(s)
+    if [[ "$MODEL_VERSION" == "both" ]]; then
+        echo "  Copying $V2_MODEL_NAME..."
+        cp -R "$V2_MODEL_SOURCE_DIR" "$PARAKEET_DIR/"
+        echo "  Copying $V3_MODEL_NAME..."
+        cp -R "$V3_MODEL_SOURCE_DIR" "$PARAKEET_DIR/"
+    else
+        echo "  Copying $MODEL_NAME..."
+        cp -R "$MODEL_SOURCE_DIR" "$PARAKEET_DIR/"
+    fi
 
     # Copy VAD model (clear and recopy to ensure completeness)
     echo "  Copying VAD model..."

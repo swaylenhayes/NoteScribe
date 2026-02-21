@@ -2,17 +2,18 @@
 
 NoteScribe is a focused macOS voice transcription app for automatic speech recognition. It runs fully offline using Frontier Core ML audio models from [Fluid Inference](https://github.com/FluidInference/FluidAudio) (Nvidia Parakeet TDT [v2](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml) and [v3](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml)) and is designed for fast dictation into any text field or for transcribing audio/video files.
 
-There are two builds with identical features:
+There are two single-model builds, plus one combined build:
 
 - **Parakeet V2** (English-only)
 - **Parakeet V3** (Multilingual - 25 European languages)
+- **Parakeet V2+V3 Combined** (both models bundled; larger download)
 
-If you only need English, choose V2 since it has a slightly lower WER for English than V3. If you need multilingual transcription, choose V3.
+If you only need English, choose V2 since it has a slightly lower WER for English than V3. If you need multilingual transcription, choose V3. If you want in-app model switching between V2 and V3 without separate installs, choose the combined build.
 
 ## Latest Release
 
 - **Version:** `v1.3.3` (February 18, 2026)
-- **Highlights:** refreshed start/stop/paste/escape sounds, and a fix for unintended Escape cue playback during normal stop.
+- **Highlights:** refreshed start/stop/paste/escape sounds, a fix for unintended Escape cue playback during normal stop, and an added combined V2+V3 release artifact.
 - **Release notes:** `/Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.3.md`
 - **Downloads:** [GitHub Releases](https://github.com/swaylenhayes/NoteScribe/releases)
 
@@ -36,7 +37,7 @@ Compared to GGML models, the CoreML models use:
 
 ## Install
 
-1. Download the DMG for **v2** or **v3** from GitHub Releases.
+1. Download the DMG for **v2**, **v3**, or **v2v3 (combined)** from GitHub Releases.
 2. Open the DMG and drag `NoteScribe.app` into **Applications**.
 3. Launch the app and grant microphone (and accessibility for paste) when prompted.
 
