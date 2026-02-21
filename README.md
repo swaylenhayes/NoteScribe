@@ -9,6 +9,13 @@ There are two builds with identical features:
 
 If you only need English, choose V2 since it has a slightly lower WER for English than V3. If you need multilingual transcription, choose V3.
 
+## Latest Release
+
+- **Version:** `v1.3.3` (February 18, 2026)
+- **Highlights:** refreshed start/stop/paste/escape sounds, and a fix for unintended Escape cue playback during normal stop.
+- **Release notes:** `/Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.3.md`
+- **Downloads:** [GitHub Releases](https://github.com/swaylenhayes/NoteScribe/releases)
+
 ## Model performance (M-series optimized)
 
 Both models are Core ML models optimized for Apple silicon. In practice, Parakeet V2/V3 Core ML runs among the fastest offline ASR options on Mac today. Compared to Whisper GGML (base / large-v3 / turbo), these models show minimal extra RAM overhead, similar CPU thread usage, and a clear shift of work to the Neural Engine, leaving the rest of the system more responsive.
