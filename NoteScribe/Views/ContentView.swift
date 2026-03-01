@@ -10,7 +10,6 @@ private let isOfflineMode = false
 #endif
 
 enum TabDestination: String, CaseIterable, Identifiable {
-    case scratchpad = "Scratch Pad"
     case transcription = "Transcription"
     case replacements = "Replacements"
     case settings = "Settings"
@@ -19,7 +18,6 @@ enum TabDestination: String, CaseIterable, Identifiable {
 
     var icon: String {
         switch self {
-        case .scratchpad: return "square.and.pencil"
         case .transcription: return "waveform.circle.fill"
         case .replacements: return "character.book.closed.fill"
         case .settings: return "gearshape.fill"
@@ -146,18 +144,12 @@ struct ContentView: View {
     @EnvironmentObject private var transcriptionState: TranscriptionState
     @EnvironmentObject private var hotkeyManager: HotkeyManager
     @AppStorage("powerModeUIFlag") private var powerModeUIFlag = false
-    @State private var selectedTab: TabDestination = .scratchpad
+    @State private var selectedTab: TabDestination = .transcription
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
 
     var body: some View {
         ZStack {
             TabView(selection: $selectedTab) {
-                ScratchpadView()
-                    .tabItem {
-                        Label(TabDestination.scratchpad.rawValue, systemImage: TabDestination.scratchpad.icon)
-                    }
-                    .tag(TabDestination.scratchpad)
-
                 TranscriptionWorkspaceView()
                     .tabItem {
                         Label(TabDestination.transcription.rawValue, systemImage: TabDestination.transcription.icon)
@@ -189,7 +181,7 @@ struct ContentView: View {
             if let destination = notification.userInfo?["destination"] as? String {
                 switch destination {
                 case "NoteScribe", "Scratch Pad", "Scratchpad", "Home":
-                    selectedTab = .scratchpad
+                    selectedTab = .transcription
                 case "Settings":
                     selectedTab = .settings
                 case "Transcription", "File Transcription", "Transcribe Audio", "History":

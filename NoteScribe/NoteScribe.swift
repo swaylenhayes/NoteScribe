@@ -237,15 +237,6 @@ struct NoteScribeApp: App {
         .commands {
             CommandGroup(replacing: .newItem) { }
             CommandMenu("Navigate") {
-                Button("Scratch Pad") {
-                    NotificationCenter.default.post(
-                        name: .navigateToDestination,
-                        object: nil,
-                        userInfo: ["destination": "Scratch Pad"]
-                    )
-                }
-                .keyboardShortcut("1", modifiers: [.command])
-
                 Button("Transcription") {
                     NotificationCenter.default.post(
                         name: .navigateToDestination,
@@ -253,7 +244,7 @@ struct NoteScribeApp: App {
                         userInfo: ["destination": "Transcribe Audio"]
                     )
                 }
-                .keyboardShortcut("2", modifiers: [.command])
+                .keyboardShortcut("1", modifiers: [.command])
 
                 Button("Replacements") {
                     NotificationCenter.default.post(
@@ -262,7 +253,7 @@ struct NoteScribeApp: App {
                         userInfo: ["destination": "Replacements"]
                     )
                 }
-                .keyboardShortcut("3", modifiers: [.command])
+                .keyboardShortcut("2", modifiers: [.command])
 
                 Button("Settings") {
                     NotificationCenter.default.post(
@@ -271,7 +262,7 @@ struct NoteScribeApp: App {
                         userInfo: ["destination": "Settings"]
                     )
                 }
-                .keyboardShortcut("4", modifiers: [.command])
+                .keyboardShortcut("3", modifiers: [.command])
             }
         }
         

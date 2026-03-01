@@ -12,7 +12,9 @@
 ## Repository Structure
 ```
 NoteScribe/
-├── base/              # Primary source tree (single codebase)
+├── NoteScribe/        # Active local app source tree
+├── NoteScribe.xcodeproj/  # Active local Xcode project
+├── base/              # Release/build-script source tree (still used by build_notescribe.sh)
 ├── models/            # External model storage (NOT in git)
 │   ├── parakeet-v2/  # ~443MB - English only
 │   ├── parakeet-v3/  # ~461MB - Multilingual
@@ -265,12 +267,14 @@ This repository is actively managed across two Claude interfaces:
 
 ### Core Source Files
 - `TranscriptionState.swift` - Main transcription coordinator
+- `RecordingIndicatorView.swift` - Floating recording status pill (SwiftUI)
+- `MiniRecorderPanel.swift` - Floating recording indicator panel (AppKit NSPanel)
 - `ParakeetTranscriptionService.swift` - CoreML integration
 - `TranscriptionOutputFilter.swift` - Filler word removal
 - `TranscriptionTextFormatter.swift` - Paragraph formatting
 - `WordReplacementService.swift` - Dictionary replacement
 - `CursorPaster.swift` - Intelligent paste handling
-- `AudioCaptureManager.swift` - Live audio capture
+- `Recorder.swift` - Live audio capture
 - `AudioFileTranscriptionService.swift` - File transcription
 - `AppDelegate.swift` - Menu bar lifecycle
 - `SettingsView.swift` - User configuration UI
@@ -281,7 +285,8 @@ This repository is actively managed across two Claude interfaces:
 - **After build**: Cleaned from source tree automatically
 
 ### Build Artifacts
-- **Source**: `base/` (single source tree)
+- **Local dev source**: `NoteScribe/` with `NoteScribe.xcodeproj`
+- **Release script source**: `base/` via `build_notescribe.sh`
 - **Releases**: `_releases/NoteScribe-v2.dmg`, `_releases/NoteScribe-v3.dmg`
 - **Archive**: `archive/` (retired worktrees, don't touch)
 

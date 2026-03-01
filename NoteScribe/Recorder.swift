@@ -115,25 +115,15 @@ class Recorder: NSObject, ObservableObject, AVAudioRecorderDelegate {
                 }
             }
             
-            audioLevelCheckTask = Task {
-                let notificationChecks: [TimeInterval] = [5.0, 12.0]
+            audioLevelCheckTask = Task { [weak self] in
+                guard let self = self else { return }
 
-                for delay in notificationChecks {
-                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                try? await Task.sleep(nanoseconds: 5_000_000_000)
 
-                    if Task.isCancelled { return }
+                if Task.isCancelled { return }
+                if self.hasDetectedAudioInCurrentSession { return }
 
-                    if self.hasDetectedAudioInCurrentSession {
-                        return
-                    }
-
-                    await MainActor.run {
-                        NotificationManager.shared.showNotification(
-                            title: "No Audio Detected",
-                            type: .warning
-                        )
-                    }
-                }
+                NotificationCenter.default.post(name: .noAudioDetected, object: nil)
             }
             
         } catch {
@@ -190,6 +180,7 @@ class Recorder: NSObject, ObservableObject, AVAudioRecorderDelegate {
 
         if !hasDetectedAudioInCurrentSession && newAudioMeter.averagePower > 0.01 {
             hasDetectedAudioInCurrentSession = true
+            NotificationCenter.default.post(name: .audioResumed, object: nil)
         }
         
         audioMeter = newAudioMeter

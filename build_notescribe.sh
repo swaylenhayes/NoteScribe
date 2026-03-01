@@ -4,8 +4,8 @@ set -euo pipefail
 # ============================================================================
 # NoteScribe Unified Build Script
 # ============================================================================
-# Builds NoteScribe with specified model payload (v2, v3, or both)
-# Usage: ./build_notescribe.sh --model v2|v3|both [--signed|--unsigned]
+# Builds NoteScribe with specified model payload (v3 or v2v3)
+# Usage: ./build_notescribe.sh --model v3|v2v3 [--signed|--unsigned]
 #
 # Environment variables:
 #   SIGNING_IDENTITY - Required for --signed (e.g., "Developer ID Application: ...")
@@ -14,7 +14,7 @@ set -euo pipefail
 # ============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$SCRIPT_DIR/base"
+ROOT_DIR="$SCRIPT_DIR"
 MODELS_DIR="$SCRIPT_DIR/models"
 SCHEME="NoteScribe"
 CONFIG="Release"
@@ -30,10 +30,10 @@ MODEL_VERSION=""
 SIGNED=0
 
 print_usage() {
-    echo "Usage: $0 --model v2|v3|both [--signed|--unsigned]"
+    echo "Usage: $0 --model v3|v2v3 [--signed|--unsigned]"
     echo ""
     echo "Options:"
-    echo "  --model v2|v3|both    Select model payload (required)"
+    echo "  --model v3|v2v3       Select model payload (required)"
     echo "  --signed         Sign and create DMG (requires SIGNING_IDENTITY)"
     echo "  --unsigned       Build without signing (default)"
     echo ""
@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
         --model)
             shift
             if [[ $# -eq 0 ]]; then
-                echo "Error: --model requires an argument (v2 or v3)" >&2
+                echo "Error: --model requires an argument (v3 or v2v3)" >&2
                 exit 1
             fi
             MODEL_VERSION="$1"
@@ -79,8 +79,12 @@ if [[ -z "$MODEL_VERSION" ]]; then
     exit 1
 fi
 
-if [[ "$MODEL_VERSION" != "v2" && "$MODEL_VERSION" != "v3" && "$MODEL_VERSION" != "both" ]]; then
-    echo "Error: --model must be 'v2', 'v3', or 'both'" >&2
+if [[ "$MODEL_VERSION" == "both" ]]; then
+    MODEL_VERSION="v2v3"
+fi
+
+if [[ "$MODEL_VERSION" != "v3" && "$MODEL_VERSION" != "v2v3" ]]; then
+    echo "Error: --model must be 'v3' or 'v2v3'" >&2
     exit 1
 fi
 
@@ -92,18 +96,15 @@ V3_MODEL_SOURCE_DIR="$MODELS_DIR/parakeet-v3/$V3_MODEL_NAME"
 VAD_SOURCE_DIR="$MODELS_DIR/vad/silero-vad-coreml"
 
 MODEL_SLUG="$MODEL_VERSION"
-if [[ "$MODEL_VERSION" == "both" ]]; then
-    MODEL_SLUG="v2v3"
-fi
 
 EXPORT_PATH="$RELEASES_DIR/NoteScribe-${MODEL_SLUG}"
 DMG_PATH="$RELEASES_DIR/NoteScribe-${MODEL_SLUG}.dmg"
 ENTITLEMENTS_PATH="$ROOT_DIR/NoteScribe/NoteScribe.entitlements.release.plist"
 
 # Validate model exists
-if [[ "$MODEL_VERSION" == "both" ]]; then
+if [[ "$MODEL_VERSION" == "v2v3" ]]; then
     if [[ ! -d "$V2_MODEL_SOURCE_DIR" || ! -d "$V3_MODEL_SOURCE_DIR" ]]; then
-        echo "Error: Both V2 and V3 models are required for --model both." >&2
+        echo "Error: Both V2 and V3 models are required for --model v2v3." >&2
         echo "Missing one of:" >&2
         echo "  $V2_MODEL_SOURCE_DIR" >&2
         echo "  $V3_MODEL_SOURCE_DIR" >&2
@@ -127,7 +128,7 @@ fi
 echo "============================================"
 echo "NoteScribe Build - Model: $MODEL_VERSION"
 echo "============================================"
-if [[ "$MODEL_VERSION" == "both" ]]; then
+if [[ "$MODEL_VERSION" == "v2v3" ]]; then
     echo "Model sources:"
     echo "  - $V2_MODEL_SOURCE_DIR"
     echo "  - $V3_MODEL_SOURCE_DIR"
@@ -151,7 +152,7 @@ copy_models() {
     rm -rf "$PARAKEET_DIR"/*
 
     # Copy selected Parakeet model(s)
-    if [[ "$MODEL_VERSION" == "both" ]]; then
+    if [[ "$MODEL_VERSION" == "v2v3" ]]; then
         echo "  Copying $V2_MODEL_NAME..."
         cp -R "$V2_MODEL_SOURCE_DIR" "$PARAKEET_DIR/"
         echo "  Copying $V3_MODEL_NAME..."

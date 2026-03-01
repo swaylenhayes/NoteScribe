@@ -75,19 +75,20 @@ class MiniRecorderShortcutManager: ObservableObject {
                 if let firstTime = self.escFirstPressTime,
                    now.timeIntervalSince(firstTime) <= self.escSecondPressThreshold {
                     self.escFirstPressTime = nil
+                    self.escapeTimeoutTask?.cancel()
+                    self.escapeTimeoutTask = nil
+                    self.transcriptionState.escPendingCancel = false
                     await self.transcriptionState.cancelRecording()
                 } else {
+                    self.escapeTimeoutTask?.cancel()
                     self.escFirstPressTime = now
                     SoundManager.shared.playEscSound()
-                    NotificationManager.shared.showNotification(
-                        title: "Press ESC again to cancel recording",
-                        type: .info,
-                        duration: self.escSecondPressThreshold
-                    )
+                    self.transcriptionState.escPendingCancel = true
                     self.escapeTimeoutTask = Task { [weak self] in
                         try? await Task.sleep(nanoseconds: UInt64((self?.escSecondPressThreshold ?? 1.5) * 1_000_000_000))
                         await MainActor.run {
                             self?.escFirstPressTime = nil
+                            self?.transcriptionState.escPendingCancel = false
                         }
                     }
                 }
@@ -135,6 +136,7 @@ class MiniRecorderShortcutManager: ObservableObject {
     private func deactivateEscapeShortcut() {
         KeyboardShortcuts.setShortcut(nil, for: .escapeRecorder)
         escFirstPressTime = nil
+        transcriptionState.escPendingCancel = false
         escapeTimeoutTask?.cancel()
         escapeTimeoutTask = nil
     }

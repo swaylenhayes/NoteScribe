@@ -9,20 +9,20 @@ Last updated: Mar 1, 2026
 - Debug run path is stable end-to-end: record -> transcribe -> paste.
 - Shared schemes use `Debug` for local runs and set `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`.
 - App Sandbox is disabled for local Debug/Release builds in this repo to prevent external model copy failures.
+- Current local development authority is the root `NoteScribe/` tree plus root `NoteScribe.xcodeproj`.
+  - `build_notescribe.sh` now targets the root tree for release packaging.
 
-## Recording indicator — designed, ready for implementation
-- **Design + implementation plan completed** this session (Mar 1, 2026).
+## Recording indicator — implemented locally
 - Floating pill-shaped NSPanel appears top-center during recording: pulsing red dot + "Recording" + elapsed timer.
 - Consolidates three scattered feedback channels (macOS orange dot, no-audio toast, ESC-cancel toast) into one unified visual zone.
 - Panel is non-activating, visible across all Spaces and full-screen apps, draggable.
 - Three pill states: normal recording (red pulse), no-audio warning (amber static), escape cancel pending (red fast pulse).
-- **Implementation plan v2** (`docs/plans/2026-03-01-recording-indicator-implementation-v2.md`) is autonomous-ready for Codex execution.
-  - 8 tasks, Tasks 1-6 + 8 are fully autonomous, Task 7 (manual test) is human-only.
-  - Key resolved blockers: pbxproj file addition scripted, AppDelegate → NotificationCenter pattern, merged atomic tasks.
-- **No code changes yet** — only design docs and plans committed.
+- Root-tree implementation is complete and builds successfully in `NoteScribe.xcodeproj`.
+- Existing bottom-screen recording toasts are replaced by pill state changes during recording.
+- Human hardware/manual verification is still pending. Use `docs/plans/2026-03-01-recording-indicator-implementation-v2.md` for the checklist.
 
 ## UI state (latest polish pass)
-- Top tab bar now uses: `Scratch Pad`, `Transcription`, `Replacements`, `Settings`.
+- Top tab bar now uses: `Transcription`, `Replacements`, `Settings`.
 - File transcription and history are merged in `Transcription`:
   - Header row contains drag/drop guidance and `Choose File`.
   - Drop target supports dropping anywhere in the Transcription view.
@@ -39,9 +39,11 @@ Last updated: Mar 1, 2026
 
 ## Release packaging status
 - `build_notescribe.sh` supports full pipeline: build -> sign -> DMG -> notarize -> staple -> validate.
+- Supported release variants are now `v3` and `v2v3`.
 - DMG container signing is enabled before notarization.
 - Prior verified pipeline status:
   - `./build_notescribe.sh --model v3 --unsigned` succeeds.
+  - `./build_notescribe.sh --model v2v3 --unsigned` succeeds.
   - `./build_notescribe.sh --model v3 --signed` succeeds.
   - `NOTARIZE=1 ./build_notescribe.sh --model v3 --signed` succeeds with Apple notarization acceptance.
 
@@ -52,8 +54,8 @@ export SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)"
 export NOTARY_PROFILE="notescribe-notary"
 NOTARIZE=1 ./build_notescribe.sh --model v3 --signed
 
-# Signed + notarized v2 release
-NOTARIZE=1 ./build_notescribe.sh --model v2 --signed
+# Signed + notarized combined v2+v3 release
+NOTARIZE=1 ./build_notescribe.sh --model v2v3 --signed
 ```
 
 ## Local run troubleshooting

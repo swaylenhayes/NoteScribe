@@ -35,6 +35,7 @@
 		275266D12EE2996E007CA86C /* TranscriptionHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266642EE2996E007CA86C /* TranscriptionHistoryView.swift */; };
 		275266D22EE2996E007CA86C /* TranscriptionOutputFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266152EE2996E007CA86C /* TranscriptionOutputFilter.swift */; };
 		275266D42EE2996E007CA86C /* MiniRecorderPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266432EE2996E007CA86C /* MiniRecorderPanel.swift */; };
+		F0A1B2C3D4E5F60718293A4B /* RecordingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0A1B2C3D4E5F60718293A4C /* RecordingIndicatorView.swift */; };
 		275266D62EE2996E007CA86C /* EditReplacementSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266322EE2996E007CA86C /* EditReplacementSheet.swift */; };
 		275266DA2EE2996E007CA86C /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266802EE2996E007CA86C /* Recorder.swift */; };
 		275266DB2EE2996E007CA86C /* LastTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275266082EE2996E007CA86C /* LastTranscriptionService.swift */; };
@@ -188,6 +189,7 @@
 		275266412EE2996E007CA86C /* AudioVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioVisualizerView.swift; sourceTree = "<group>"; };
 		275266432EE2996E007CA86C /* MiniRecorderPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniRecorderPanel.swift; sourceTree = "<group>"; };
 		275266442EE2996E007CA86C /* MiniRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniRecorderView.swift; sourceTree = "<group>"; };
+		F0A1B2C3D4E5F60718293A4C /* RecordingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingIndicatorView.swift; sourceTree = "<group>"; };
 		275266452EE2996E007CA86C /* MiniWindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniWindowManager.swift; sourceTree = "<group>"; };
 		275266462EE2996E007CA86C /* NotchRecorderPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchRecorderPanel.swift; sourceTree = "<group>"; };
 		275266472EE2996E007CA86C /* NotchRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotchRecorderView.swift; sourceTree = "<group>"; };
@@ -401,6 +403,7 @@
 				275266412EE2996E007CA86C /* AudioVisualizerView.swift */,
 				275266432EE2996E007CA86C /* MiniRecorderPanel.swift */,
 				275266442EE2996E007CA86C /* MiniRecorderView.swift */,
+				F0A1B2C3D4E5F60718293A4C /* RecordingIndicatorView.swift */,
 				275266452EE2996E007CA86C /* MiniWindowManager.swift */,
 				275266462EE2996E007CA86C /* NotchRecorderPanel.swift */,
 				275266472EE2996E007CA86C /* NotchRecorderView.swift */,
@@ -707,6 +710,7 @@
 				275266D12EE2996E007CA86C /* TranscriptionHistoryView.swift in Sources */,
 				275266D22EE2996E007CA86C /* TranscriptionOutputFilter.swift in Sources */,
 				275266D42EE2996E007CA86C /* MiniRecorderPanel.swift in Sources */,
+				F0A1B2C3D4E5F60718293A4B /* RecordingIndicatorView.swift in Sources */,
 				275266D62EE2996E007CA86C /* EditReplacementSheet.swift in Sources */,
 				275266DA2EE2996E007CA86C /* Recorder.swift in Sources */,
 				275266DB2EE2996E007CA86C /* LastTranscriptionService.swift in Sources */,

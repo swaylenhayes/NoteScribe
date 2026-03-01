@@ -8,11 +8,15 @@ extension TranscriptionState {
     // MARK: - Recorder Panel Management
     
     func showRecorderPanel() {
-        // UI recorder panels are disabled; rely on the menu bar indicator only.
+        noAudioDetected = false
+        escPendingCancel = false
+        recordingIndicatorPanel.showIndicator()
     }
     
     func hideRecorderPanel() {
-        // UI recorder panels are disabled; nothing to hide.
+        noAudioDetected = false
+        escPendingCancel = false
+        recordingIndicatorPanel.hideIndicator()
     }
     
     // MARK: - Mini Recorder Management
@@ -31,7 +35,8 @@ extension TranscriptionState {
             await toggleRecord()
 
             await MainActor.run {
-                isMiniRecorderVisible = true // This will call showRecorderPanel() via didSet
+                // Keep the recording session active for hotkey handling while startup completes.
+                isMiniRecorderVisible = true
             }
         }
     }
@@ -92,6 +97,8 @@ extension TranscriptionState {
     func setupNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleToggleRecording), name: .toggleRecording, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleCancelRecording), name: .cancelRecording, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleNoAudioDetected), name: .noAudioDetected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleAudioResumed), name: .audioResumed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleLicenseStatusChanged), name: .licenseStatusChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handlePromptChange), name: .promptDidChange, object: nil)
     }
@@ -106,6 +113,14 @@ extension TranscriptionState {
         Task {
             await cancelRecordingUI()
         }
+    }
+
+    @objc func handleNoAudioDetected() {
+        noAudioDetected = true
+    }
+
+    @objc func handleAudioResumed() {
+        noAudioDetected = false
     }
     
     // OFFLINE MODE: Removed license handling

@@ -2,13 +2,12 @@
 
 NoteScribe is a focused macOS voice transcription app for automatic speech recognition. It runs fully offline using Frontier Core ML audio models from [Fluid Inference](https://github.com/FluidInference/FluidAudio) (Nvidia Parakeet TDT [v2](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v2-coreml) and [v3](https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml)) and is designed for fast dictation into any text field or for transcribing audio/video files.
 
-There are two single-model builds, plus one combined build:
+There are two release builds:
 
-- **Parakeet V2** (English-only)
 - **Parakeet V3** (Multilingual - 25 European languages)
 - **Parakeet V2+V3 Combined** (both models bundled; larger download)
 
-If you only need English, choose V2 since it has a slightly lower WER for English than V3. If you need multilingual transcription, choose V3. If you want in-app model switching between V2 and V3 without separate installs, choose the combined build.
+V3 is the default release. If you want in-app model switching between V2 and V3 without separate installs, choose the combined build.
 
 ## Latest Release
 
@@ -31,13 +30,12 @@ Compared to GGML models, the CoreML models use:
 ## What it does
 
 - Hotkey dictation that pastes into the frontmost app
-- Scratchpad tab for dumping and editing text
 - File transcription (audio/video)
 - History and replacements
 
 ## Install
 
-1. Download the DMG for **v2**, **v3**, or **v2v3 (combined)** from GitHub Releases.
+1. Download the DMG for **v3** or **v2v3 (combined)** from GitHub Releases.
 2. Open the DMG and drag `NoteScribe.app` into **Applications**.
 3. Launch the app and grant microphone (and accessibility for paste) when prompted.
 

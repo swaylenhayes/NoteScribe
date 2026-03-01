@@ -3,6 +3,8 @@ import Foundation
 extension Notification.Name {
     static let AppSettingsDidChange = Notification.Name("appSettingsDidChange")
     static let languageDidChange = Notification.Name("languageDidChange")
+    static let noAudioDetected = Notification.Name("noAudioDetected")
+    static let audioResumed = Notification.Name("audioResumed")
     static let promptDidChange = Notification.Name("promptDidChange")
     static let toggleRecording = Notification.Name("toggleRecording")
     static let cancelRecording = Notification.Name("cancelRecording")

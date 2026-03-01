@@ -10,13 +10,15 @@ Last updated: Mar 1, 2026
 - Window sizing polish (minimum width set to `650`, default opens compact and resizable).
 - Dark mode readability and contrast polish across scratch pad, transcription list/search, replacements, and settings controls.
 - V2/V3 model switching UI in Settings with in-session warmup behavior.
+- Recording indicator floating pill for visual recording state feedback.
+  - Consolidates no-audio and escape-cancel notifications into one top-center status zone.
 - Release build pipeline hardening:
   - signing, notarization, stapling, validation
   - DMG container signing before notarization
   - FluidAudio universal compile compatibility patch path
 
-## In progress — designed, awaiting implementation
-- **Recording indicator pill**: floating top-center NSPanel with pulsing red dot + label + elapsed timer during recording. Consolidates no-audio and ESC-cancel toasts into unified zone. Implementation plan v2 ready for autonomous execution via Codex. See `docs/plans/2026-03-01-recording-indicator-implementation-v2.md`.
+## Pending verification
+- Recording indicator manual hardware check on a real microphone/display setup. See `docs/plans/2026-03-01-recording-indicator-implementation-v2.md`.
 
 ## Near-term remaining
 - **Multi-monitor recording indicator**: follow-active-screen for the recording pill if primary-only proves insufficient.

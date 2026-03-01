@@ -21,12 +21,6 @@ struct MenuBarView: View {
                 Divider()
             }
 
-            Button("Open Scratch Pad") {
-                menuBarManager.openMainWindowAndNavigate(to: "Scratch Pad")
-            }
-
-            Divider()
-
             Button("Retry Last Transcription") {
                 LastTranscriptionService.retryLastTranscription(from: transcriptionState.modelContext, transcriptionState: transcriptionState)
             }

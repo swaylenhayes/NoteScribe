@@ -28,6 +28,8 @@ class TranscriptionState: NSObject, ObservableObject {
     @Published var miniRecorderError: String?
     @Published var shouldCancelRecording = false
     @Published var isMiniRecorderVisible = false
+    @Published var noAudioDetected = false
+    @Published var escPendingCancel = false
     
     let recorder = Recorder()
     var recordedFile: URL? = nil
@@ -37,6 +39,7 @@ class TranscriptionState: NSObject, ObservableObject {
     
     // v1.2: Only Parakeet transcription service
     internal lazy var parakeetTranscriptionService = ParakeetTranscriptionService()
+    private(set) lazy var recordingIndicatorPanel = RecordingIndicatorPanel(transcriptionState: self)
     
     private var modelUrl: URL? {
         let possibleURLs = [
@@ -103,6 +106,7 @@ class TranscriptionState: NSObject, ObservableObject {
     func toggleRecord() async {
         if recordingState == .recording {
             recorder.stopRecording()
+            hideRecorderPanel()
             if let recordedFile {
                 if !shouldCancelRecording {
                     let audioAsset = AVURLAsset(url: recordedFile)
@@ -155,6 +159,7 @@ class TranscriptionState: NSObject, ObservableObject {
                             
                             await MainActor.run {
                                 self.recordingState = .recording
+                                self.showRecorderPanel()
                             }
 
                             // OFFLINE MODE: Removed ActiveWindowService (window management)
