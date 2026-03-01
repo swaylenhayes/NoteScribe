@@ -4,9 +4,11 @@ import AVFoundation
 import FluidAudio
 import os.log
 
-class ParakeetTranscriptionService: TranscriptionService {
+actor ParakeetTranscriptionService: TranscriptionService {
     private var asrManagers: [AsrModelVersion: AsrManager] = [:]
+    private var asrLoadTasks: [AsrModelVersion: Task<Void, Error>] = [:]
     private var vadManager: VadManager?
+    private var vadLoadTask: Task<Void, Error>?
     private var activeVersion: AsrModelVersion?
     private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe.parakeet", category: "ParakeetTranscriptionService")
 
@@ -14,13 +16,12 @@ class ParakeetTranscriptionService: TranscriptionService {
         model.name.lowercased().contains("v2") ? .v2 : .v3
     }
 
-    private func ensureModelsLoaded(for version: AsrModelVersion) async throws {
+    private func loadAsrManager(for version: AsrModelVersion) async throws {
         if asrManagers[version] != nil {
-            activeVersion = version
             return
         }
 
-        // Ensure bundled models are in the FluidAudio cache before loading
+        // Ensure bundled models are in the FluidAudio cache before loading.
         try ModelBundleManager.ensureModelsAvailable()
 
         let mlConfig = MLModelConfiguration()
@@ -32,8 +33,65 @@ class ParakeetTranscriptionService: TranscriptionService {
             version: version
         )
         try await manager.initialize(models: models)
-        self.asrManagers[version] = manager
-        self.activeVersion = version
+        asrManagers[version] = manager
+    }
+
+    private func ensureModelsLoaded(for version: AsrModelVersion) async throws {
+        if asrManagers[version] != nil {
+            activeVersion = version
+            return
+        }
+
+        let loadTask: Task<Void, Error>
+        if let existingTask = asrLoadTasks[version] {
+            loadTask = existingTask
+        } else {
+            loadTask = Task { [self] in
+                try await loadAsrManager(for: version)
+            }
+            asrLoadTasks[version] = loadTask
+        }
+
+        do {
+            try await loadTask.value
+            activeVersion = version
+            asrLoadTasks[version] = nil
+        } catch {
+            asrLoadTasks[version] = nil
+            throw error
+        }
+    }
+
+    private func loadVadManager() async throws {
+        if vadManager != nil {
+            return
+        }
+
+        vadManager = try await VadManager(config: VadConfig(defaultThreshold: 0.7))
+    }
+
+    private func ensureVadLoaded() async throws {
+        if vadManager != nil {
+            return
+        }
+
+        let loadTask: Task<Void, Error>
+        if let existingTask = vadLoadTask {
+            loadTask = existingTask
+        } else {
+            loadTask = Task { [self] in
+                try await loadVadManager()
+            }
+            vadLoadTask = loadTask
+        }
+
+        do {
+            try await loadTask.value
+            vadLoadTask = nil
+        } catch {
+            vadLoadTask = nil
+            throw error
+        }
     }
 
     func loadModel(for model: ParakeetModel) async throws {
@@ -59,7 +117,7 @@ class ParakeetTranscriptionService: TranscriptionService {
         if durationSeconds >= 20.0, useVAD {
             if vadManager == nil {
                 let vadStart = Date()
-                vadManager = try await VadManager(config: VadConfig(defaultThreshold: 0.7))
+                try await ensureVadLoaded()
                 logger.notice("[perf] VadManager init: \(String(format: "%.2f", Date().timeIntervalSince(vadStart)))s")
             }
 
@@ -104,6 +162,12 @@ class ParakeetTranscriptionService: TranscriptionService {
     }
 
     func cleanup() {
+        for task in asrLoadTasks.values {
+            task.cancel()
+        }
+        asrLoadTasks.removeAll()
+        vadLoadTask?.cancel()
+        vadLoadTask = nil
         for manager in asrManagers.values {
             manager.cleanup()
         }
