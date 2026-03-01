@@ -1,6 +1,6 @@
 # Current State (Bookmark)
 
-Last updated: Feb 17, 2026
+Last updated: Mar 1, 2026
 
 ## Current snapshot
 - FluidAudio is pinned to revision `99220bc49f085235998b9937172618399deb4412` and release/universal builds now compile cleanly.
@@ -9,6 +9,17 @@ Last updated: Feb 17, 2026
 - Debug run path is stable end-to-end: record -> transcribe -> paste.
 - Shared schemes use `Debug` for local runs and set `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`.
 - App Sandbox is disabled for local Debug/Release builds in this repo to prevent external model copy failures.
+
+## Recording indicator — designed, ready for implementation
+- **Design + implementation plan completed** this session (Mar 1, 2026).
+- Floating pill-shaped NSPanel appears top-center during recording: pulsing red dot + "Recording" + elapsed timer.
+- Consolidates three scattered feedback channels (macOS orange dot, no-audio toast, ESC-cancel toast) into one unified visual zone.
+- Panel is non-activating, visible across all Spaces and full-screen apps, draggable.
+- Three pill states: normal recording (red pulse), no-audio warning (amber static), escape cancel pending (red fast pulse).
+- **Implementation plan v2** (`docs/plans/2026-03-01-recording-indicator-implementation-v2.md`) is autonomous-ready for Codex execution.
+  - 8 tasks, Tasks 1-6 + 8 are fully autonomous, Task 7 (manual test) is human-only.
+  - Key resolved blockers: pbxproj file addition scripted, AppDelegate → NotificationCenter pattern, merged atomic tasks.
+- **No code changes yet** — only design docs and plans committed.
 
 ## UI state (latest polish pass)
 - Top tab bar now uses: `Scratch Pad`, `Transcription`, `Replacements`, `Settings`.
