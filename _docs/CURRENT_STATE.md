@@ -14,6 +14,14 @@ Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the cu
 - Current local development authority is the root `NoteScribe/` tree plus root `NoteScribe.xcodeproj`.
   - `build_notescribe.sh` now targets the root tree for release packaging.
 
+## Repo privacy + sync policy
+- `base/` is local-only legacy material and is no longer tracked or synced.
+- `docs/plans/` is local-only and private; planning docs should stay untracked.
+- Machine-specific absolute paths have been scrubbed from tracked docs and helper scripts.
+- Shared scripts now use dynamic or repo-relative paths instead of hardcoded local-user paths.
+- Public repo history was rewritten on Mar 1, 2026 to remove accidentally uploaded `docs/plans/` files from reachable refs.
+- Historical caveat: old third-party clones or external caches may still retain prior objects even though public refs were rewritten.
+
 ## Recording indicator — implemented locally
 - Floating pill-shaped NSPanel appears top-center during recording: pulsing red dot + "Recording" + elapsed timer.
 - Consolidates three scattered feedback channels (macOS orange dot, no-audio toast, ESC-cancel toast) into one unified visual zone.

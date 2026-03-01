@@ -33,3 +33,6 @@ These are safe to export in your local shell because they are not committed and 
 - If a new machine is used, you must install the Developer ID certificate and recreate the notary profile in Keychain.
 - If a new notary profile name is used, update `NOTARY_PROFILE` accordingly.
 - Never commit user-specific absolute filesystem paths in docs or helper scripts. Use repo-relative paths, `$REPO_ROOT`, or `$HOME` placeholders instead.
+- Keep `docs/plans/` local-only and private. Do not track or sync planning docs.
+- Keep `base/` local-only legacy material. Do not re-add it to the tracked repo unless there is an explicit migration decision.
+- Helper scripts should resolve repo paths dynamically and must not assume a specific local username, home directory, or machine path.

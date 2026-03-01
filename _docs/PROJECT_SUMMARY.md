@@ -29,6 +29,8 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 
 ## Repo organization (high level)
 - `NoteScribe/` and `NoteScribe.xcodeproj/` are the active tracked app source and project.
+- `base/` is local-only legacy material and is not part of the synced repo.
+- `docs/plans/` is local-only/private and is not part of the synced repo.
 - `_releases/` holds DMGs and notarized outputs.
 - `archive/` holds retired items: large models, legacy VAD upgrade folders, and DerivedData.
 - Active docs:

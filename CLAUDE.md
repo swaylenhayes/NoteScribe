@@ -7,7 +7,7 @@
 - **Key Dependencies**: FluidAudio (ASR + VAD), KeyboardShortcuts
 - **Models**: Parakeet v2/v3 CoreML bundles (~480MB each), Silero VAD (bundled, offline mode)
 - **Privacy-First**: All processing local, no network calls, no telemetry, no model downloads
-- **Current Release**: v1.2 (model warmup feature, instant first transcription)
+- **Current Release**: v1.3.4
 
 ## Repository Structure
 ```
@@ -22,12 +22,19 @@ NoteScribe/
 │   ├── NoteScribe-v2.dmg  # Signed/notarized v2
 │   └── NoteScribe-v3.dmg  # Signed/notarized v3
 ├── archive/           # Retired code, worktrees, large models
-├── build_notescribe.sh    # Unified build script (--model v2|v3)
+├── build_notescribe.sh    # Unified build script (--model v3|v2v3)
 ├── uninstall_notescribe.sh  # Clean uninstall helper
 ├── CURRENT_STATE.md   # Project status (KEEP UPDATED)
 ├── DEV_BUILD_COMMANDS.md    # Build process reference
-└── RELEASE_NOTES_v1.2.md    # Current release notes
+└── _docs/RELEASE_NOTES_v1.3.4.md    # Current release notes
 ```
+
+## Repo Privacy Rules
+- `NoteScribe/` + `NoteScribe.xcodeproj/` are the only tracked active source-of-truth app paths.
+- `base/` is local-only legacy material and must stay out of the synced repo.
+- `docs/plans/` is local-only and must stay out of the synced repo.
+- Do not commit user-specific filesystem paths, usernames, or machine-local examples.
+- If sensitive docs are accidentally pushed, remove them from tracked history rather than only deleting them in a follow-up commit.
 
 ## Model Assets (Critical Info)
 
@@ -111,22 +118,22 @@ export NOTARY_PROFILE="your-notary-profile"
 
 #### Quick Build Commands
 ```bash
-# Unified build script - use --model v2 or --model v3
+# Unified build script - use --model v3 or --model v2v3
 
 # Full pipeline: build + sign + notarize + staple + validate
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
-  ./build_notescribe.sh --model v2 --signed
+  ./build_notescribe.sh --model v3 --signed
 
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
-  ./build_notescribe.sh --model v3 --signed
+  ./build_notescribe.sh --model v2v3 --signed
 
 # Unsigned build (for local testing only)
 ./build_notescribe.sh --model v3
 ```
 
 #### Output Locations
-- v2 DMG: `$REPO_ROOT/_releases/NoteScribe-v2.dmg`
 - v3 DMG: `$REPO_ROOT/_releases/NoteScribe-v3.dmg`
+- v2+v3 DMG: `$REPO_ROOT/_releases/NoteScribe-v2v3.dmg`
 - Apps in respective folders under `_releases/`
 
 #### Testing Protocol
@@ -212,7 +219,7 @@ Text Formatter (optional) → Word Replacement → Save & Paste
 ### Roadmap Priorities
 1. Resolve first-run paste reliability (highest priority)
 2. Create filler-words enhancement branch
-3. Refactor to single `base` source tree with external model injection
+3. Continue with root-tree source authority and keep private planning docs local-only
 4. Enhanced punctuation and text formatting
 5. Emoji embellishments feature
 6. MCP command execution integration
