@@ -10,12 +10,12 @@ This file documents local-only setup details for code signing/notarization and h
 
 ### Keychain items (expected)
 - Developer ID Application certificate for signing (visible via `security find-identity -p codesigning -v`).
-- Notary profile stored by `xcrun notarytool store-credentials`, e.g. `notescribe-notary`.
+- Notary profile stored by `xcrun notarytool store-credentials`, e.g. `<notary-profile>`.
 
 ### Environment variables (per-shell)
 These are safe to export in your local shell because they are not committed and not visible to tools unless you paste them:
 - `SIGNING_IDENTITY` (e.g. `Developer ID Application: Your Name (TEAMID)`)
-- `NOTARY_PROFILE` (e.g. `notescribe-notary`)
+- `NOTARY_PROFILE` (e.g. `<notary-profile>`)
 
 ### Where secrets live
 - **Keychain**: stores the Developer ID cert + notary credentials.

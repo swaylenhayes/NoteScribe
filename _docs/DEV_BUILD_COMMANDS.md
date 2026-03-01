@@ -16,7 +16,7 @@ The unified build script handles everything: build, sign, notarize, staple, and 
 ## Prereqs (one-time)
 ```bash
 # Store notarization credentials in Keychain
-xcrun notarytool store-credentials notescribe-notary \
+xcrun notarytool store-credentials your-notary-profile \
   --apple-id "YOUR_APPLE_ID" \
   --team-id "YOUR_TEAM_ID" \
   --password
@@ -203,7 +203,7 @@ Note:
 ```bash
 # 1) Restore signing env for this shell
 export SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)"
-export NOTARY_PROFILE="notescribe-notary"
+export NOTARY_PROFILE="your-notary-profile"
 
 # 2) Signed release package build
 ./build_notescribe.sh --model v3 --signed
@@ -241,15 +241,15 @@ All of the following completed successfully on local machine:
 ```bash
 ./build_notescribe.sh --model v3 --unsigned
 
-SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
+SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
   ./build_notescribe.sh --model v3 --signed
 
-SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
-NOTARY_PROFILE="notescribe-notary" NOTARIZE=1 \
+SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+NOTARY_PROFILE="your-notary-profile" NOTARIZE=1 \
   ./build_notescribe.sh --model v3 --signed
 
-SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
-NOTARY_PROFILE="notescribe-notary" NOTARIZE=1 \
+SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+NOTARY_PROFILE="your-notary-profile" NOTARIZE=1 \
   ./build_notescribe.sh --model v2v3 --signed
 ```
 

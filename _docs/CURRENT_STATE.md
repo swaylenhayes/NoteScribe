@@ -53,7 +53,7 @@ Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the cu
 ```bash
 # Signed + notarized v3 release
 export SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)"
-export NOTARY_PROFILE="notescribe-notary"
+export NOTARY_PROFILE="your-notary-profile"
 NOTARIZE=1 ./build_notescribe.sh --model v3 --signed
 
 # Signed + notarized combined v2+v3 release
