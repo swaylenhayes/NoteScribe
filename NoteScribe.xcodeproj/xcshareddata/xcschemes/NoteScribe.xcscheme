@@ -82,7 +82,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "NOTESCRIBE_MODELS_DIR"
-            value = "/Users/swaylen/dev/NoteScribe/models"
+            value = "$(PROJECT_DIR)/models"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

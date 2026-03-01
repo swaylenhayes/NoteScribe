@@ -3,9 +3,20 @@ set -u
 set -o pipefail
 
 APP_NAME="NoteScribe"
-BUNDLE_ID="com.swaylenhayes.apps.notescribe"
 APP_PATH="/Applications/${APP_NAME}.app"
+BUNDLE_ID="${BUNDLE_ID_OVERRIDE:-}"
 TIMESTAMP="$(date +"%Y%m%d-%H%M%S")"
+
+if [[ -z "$BUNDLE_ID" && -f "$APP_PATH/Contents/Info.plist" ]]; then
+  BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Contents/Info.plist" 2>/dev/null || true)"
+fi
+
+if [[ -z "$BUNDLE_ID" ]]; then
+  echo "Could not determine bundle identifier from ${APP_PATH}." >&2
+  echo "Set BUNDLE_ID_OVERRIDE and rerun if the app bundle has already been removed." >&2
+  exit 1
+fi
+
 BACKUP_DIR="$HOME/Desktop/${APP_NAME}-backup-${TIMESTAMP}"
 CONTAINER_SUPPORT_PATH="$HOME/Library/Containers/${BUNDLE_ID}/Data/Library/Application Support/${BUNDLE_ID}"
 APP_SUPPORT_PATH="$HOME/Library/Application Support/${BUNDLE_ID}"

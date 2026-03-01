@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DMG_PATH="/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DMG_PATH="$SCRIPT_DIR/_releases/NoteScribe-v2.dmg"
 
 xcrun stapler staple "$DMG_PATH"
 xcrun stapler validate "$DMG_PATH"

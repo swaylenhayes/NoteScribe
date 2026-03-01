@@ -32,3 +32,4 @@ These are safe to export in your local shell because they are not committed and 
 ## Notes
 - If a new machine is used, you must install the Developer ID certificate and recreate the notary profile in Keychain.
 - If a new notary profile name is used, update `NOTARY_PROFILE` accordingly.
+- Never commit user-specific absolute filesystem paths in docs or helper scripts. Use repo-relative paths, `$REPO_ROOT`, or `$HOME` placeholders instead.

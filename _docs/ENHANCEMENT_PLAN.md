@@ -21,7 +21,7 @@ The transcription failure is caused by a chain of events in the FluidAudio SDK's
 **Why the first load fails** (triggering the destructive retry): This needs runtime debugging to pinpoint, but the most likely cause is that the Xcode debug build has an **empty `Parakeet/` folder** in its Resources (confirmed — the build script cleans models after building). If models were previously cached by `ModelInitializationService`, the cache works — but if anything clears it (the retry logic, OS update, etc.), the app can't recover because `NoteScribeModelsInitializedV1` UserDefaults flag is already `true`, so it skips re-copying.
 
 **Confirmed facts:**
-- Models exist at `~/Library/Application Support/FluidAudio/Models/parakeet-tdt-0.6b-v3-coreml/` and load successfully from the command line
+- Models exist at `$HOME/Library/Application Support/FluidAudio/Models/parakeet-tdt-0.6b-v3-coreml/` and load successfully from the command line
 - The `/Applications/NoteScribe.app` bundle has models; the Xcode debug build does NOT
 - Console logs show repeated `DownloadUtils` errors at every transcription attempt
 - NoteScribe uses FluidAudio **v0.8.0**; Keeter uses a much newer version pinned to `main`

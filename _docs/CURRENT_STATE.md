@@ -2,12 +2,14 @@
 
 Last updated: Mar 1, 2026
 
+Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the current user's home directory.
+
 ## Current snapshot
 - FluidAudio is pinned to revision `99220bc49f085235998b9937172618399deb4412` and release/universal builds now compile cleanly.
 - Model loading is fully migrated to `ModelBundleManager` and is idempotent.
 - Accessibility permission loop issues are fixed (`CursorPaster` prompt cooldown + one-time session request path).
 - Debug run path is stable end-to-end: record -> transcribe -> paste.
-- Shared schemes use `Debug` for local runs and set `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`.
+- Shared schemes use `Debug` for local runs and set `NOTESCRIBE_MODELS_DIR=$REPO_ROOT/models`.
 - App Sandbox is disabled for local Debug/Release builds in this repo to prevent external model copy failures.
 - Current local development authority is the root `NoteScribe/` tree plus root `NoteScribe.xcodeproj`.
   - `build_notescribe.sh` now targets the root tree for release packaging.
@@ -65,8 +67,8 @@ NOTARIZE=1 ./build_notescribe.sh --model v2v3 --signed
 - Fix:
   1. `Product -> Clean Build Folder`
   2. Ensure scheme `Run` is `Debug`
-  3. Ensure env var: `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`
+  3. Ensure env var: `NOTESCRIBE_MODELS_DIR=$REPO_ROOT/models`
   4. Quit app
   5. Clear caches:
-     - `~/Library/Application Support/FluidAudio/Models`
-     - `~/Library/Containers/com.swaylenhayes.apps.notescribe/Data/Library/Application Support/FluidAudio/Models`
+     - `$HOME/Library/Application Support/FluidAudio/Models`
+     - `$HOME/Library/Containers/<bundle-id>/Data/Library/Application Support/FluidAudio/Models`

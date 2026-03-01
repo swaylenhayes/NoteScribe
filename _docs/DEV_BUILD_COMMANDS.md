@@ -3,6 +3,11 @@
 ## Overview
 The unified build script handles everything: build, sign, notarize, staple, and validate.
 
+## Path Convention
+- Use `$REPO_ROOT` for the repository root in commands and examples.
+- Use `$HOME` for user-home references.
+- Do not commit machine-specific absolute paths like `/Users/<name>/...`.
+
 ## Current Release Target
 - Version: `1.3.4`
 - Build: `103`
@@ -19,6 +24,7 @@ xcrun notarytool store-credentials notescribe-notary \
 
 ## Environment Setup (per shell session)
 ```bash
+export REPO_ROOT="/path/to/NoteScribe"
 export SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)"
 export NOTARY_PROFILE="your-notary-profile"
 ```
@@ -76,22 +82,22 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 ---
 
 ## Output Locations
-- v3 app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3/NoteScribe.app`
-- v3 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg`
-- v2+v3 combined app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3/NoteScribe.app`
-- v2+v3 combined DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg`
+- v3 app: `$REPO_ROOT/_releases/NoteScribe-v3/NoteScribe.app`
+- v3 DMG: `$REPO_ROOT/_releases/NoteScribe-v3.dmg`
+- v2+v3 combined app: `$REPO_ROOT/_releases/NoteScribe-v2v3/NoteScribe.app`
+- v2+v3 combined DMG: `$REPO_ROOT/_releases/NoteScribe-v2v3.dmg`
 
 ---
 
 ## Manual Staple/Validate (if needed separately)
 ```bash
 # Staple
-xcrun stapler staple "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
-xcrun stapler staple "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
+xcrun stapler staple "$REPO_ROOT/_releases/NoteScribe-v3.dmg"
+xcrun stapler staple "$REPO_ROOT/_releases/NoteScribe-v2v3.dmg"
 
 # Validate
-xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
-xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
+xcrun stapler validate "$REPO_ROOT/_releases/NoteScribe-v3.dmg"
+xcrun stapler validate "$REPO_ROOT/_releases/NoteScribe-v2v3.dmg"
 ```
 
 ---
@@ -104,7 +110,7 @@ xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.
 ### Fresh Install (clean slate)
 ```bash
 # Run uninstall script first
-/Users/swaylen/dev/NoteScribe/uninstall_notescribe.sh
+$REPO_ROOT/uninstall_notescribe.sh
 ```
 
 ---
@@ -122,7 +128,7 @@ models/
 
 ## Script Location
 ```
-/Users/swaylen/dev/NoteScribe/build_notescribe.sh
+$REPO_ROOT/build_notescribe.sh
 ```
 
 ## Archived Scripts
@@ -152,10 +158,10 @@ Related build behavior:
 
 ### Current release-package status
 - `./build_notescribe.sh --model v3 --unsigned` now succeeds end-to-end.
-- Export path confirmed: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3/NoteScribe.app`
+- Export path confirmed: `$REPO_ROOT/_releases/NoteScribe-v3/NoteScribe.app`
 - Direct `xcodebuild` Release builds now pass for both:
-  - `/Users/swaylen/dev/NoteScribe/base/NoteScribe.xcodeproj`
-  - `/Users/swaylen/dev/NoteScribe/NoteScribe.xcodeproj`
+  - `$REPO_ROOT/base/NoteScribe.xcodeproj`
+  - `$REPO_ROOT/NoteScribe.xcodeproj`
 
 ### Direct Xcode Build Notes
 - Placeholder bundle paths are now kept in repo:
@@ -167,17 +173,17 @@ Related build behavior:
 ### Direct Xcode Run (Debug) model loading
 - App now falls back to repo models in local Debug runs when bundled resources are placeholders.
 - Optional explicit override in Xcode Scheme environment:
-  - `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`
+  - `NOTESCRIBE_MODELS_DIR=$REPO_ROOT/models`
 - If transcription still says model not loaded:
   1. `Product -> Clean Build Folder`
   2. In Xcode: `Product -> Scheme -> Edit Scheme... -> Run -> Build Configuration = Debug`
      (preferred for local iteration)
   3. In the same Run settings, confirm env var:
-     `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`
+     `NOTESCRIBE_MODELS_DIR=$REPO_ROOT/models`
   4. Quit app
-  5. Remove cache: `~/Library/Application Support/FluidAudio/Models`
+  5. Remove cache: `$HOME/Library/Application Support/FluidAudio/Models`
   6. Remove old container cache if present:
-     `~/Library/Containers/com.swaylenhayes.apps.notescribe/Data/Library/Application Support/FluidAudio/Models`
+     `$HOME/Library/Containers/<bundle-id>/Data/Library/Application Support/FluidAudio/Models`
   7. Run again
 
 ### Permission error: `"parakeet-tdt-0.6b-v3-coreml" couldn't be copied ... access "Models"`
@@ -187,7 +193,7 @@ Use this fix for local development:
 1. `Product -> Scheme -> Edit Scheme...`
 2. Select `Run`
 3. Set `Build Configuration` to `Debug`
-4. Add/verify env var `NOTESCRIBE_MODELS_DIR=/Users/swaylen/dev/NoteScribe/models`
+4. Add/verify env var `NOTESCRIBE_MODELS_DIR=$REPO_ROOT/models`
 5. Clean build folder, clear cache, relaunch
 
 Note:
@@ -221,8 +227,8 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
   ./build_notescribe.sh --model v2v3 --signed
 
 # 2) Gatekeeper checks on final DMGs
-spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
-spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
+spctl -a -vv -t open "$REPO_ROOT/_releases/NoteScribe-v3.dmg"
+spctl -a -vv -t open "$REPO_ROOT/_releases/NoteScribe-v2v3.dmg"
 ```
 
 ### v1.3.4 Release Notes Summary

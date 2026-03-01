@@ -126,8 +126,8 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 ```
 
 #### Output Locations
-- v2 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg`
-- v3 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg`
+- v2 DMG: `$REPO_ROOT/_releases/NoteScribe-v2.dmg`
+- v3 DMG: `$REPO_ROOT/_releases/NoteScribe-v3.dmg`
 - Apps in respective folders under `_releases/`
 
 #### Testing Protocol
@@ -354,7 +354,7 @@ This repository is actively managed across two Claude interfaces:
 - **Machine**: MacBook Pro M2 Max, 96GB RAM
 - **OS**: macOS 15.7.2 (Sequoia)
 - **Shell**: zsh + Oh-My-Zsh + Starship
-- **Dev Path**: `/Users/swaylen/dev/NoteScribe/`
+- **Dev Path**: `$REPO_ROOT/`
 
 **Primary IDEs & Tools**:
 - **Xcode**: Primary for Swift/macOS development

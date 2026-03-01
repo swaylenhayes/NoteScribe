@@ -5,9 +5,9 @@
 - Title: `NoteScribe v1.3.3`
 
 ## Assets to upload
-- `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg`
-- `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg`
-- `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg`
+- `$REPO_ROOT/_releases/NoteScribe-v2.dmg`
+- `$REPO_ROOT/_releases/NoteScribe-v3.dmg`
+- `$REPO_ROOT/_releases/NoteScribe-v2v3.dmg`
 
 ## SHA-256
 ```text
@@ -22,11 +22,11 @@ a2401f2a3f4c675b574c17e4ba7f208dac2077cbf846a659fc6b0c58098da047  NoteScribe-v2v
 - `67590167-2884-4c19-a47d-6f517d406dde` (`NoteScribe-v2v3.dmg`)
 
 ## Release notes file
-- `/Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.3.md`
+- `$REPO_ROOT/_docs/RELEASE_NOTES_v1.3.3.md`
 
 ## Commands
 ```bash
-cd /Users/swaylen/dev/NoteScribe
+cd $REPO_ROOT
 
 # Create tag
 git tag v1.3.3
@@ -34,10 +34,10 @@ git push origin v1.3.3
 
 # Create GitHub release (draft)
 gh release create v1.3.3 \
-  /Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg \
-  /Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg \
-  /Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg \
+  $REPO_ROOT/_releases/NoteScribe-v2.dmg \
+  $REPO_ROOT/_releases/NoteScribe-v3.dmg \
+  $REPO_ROOT/_releases/NoteScribe-v2v3.dmg \
   --title "NoteScribe v1.3.3" \
-  --notes-file /Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.3.md \
+  --notes-file $REPO_ROOT/_docs/RELEASE_NOTES_v1.3.3.md \
   --draft
 ```
