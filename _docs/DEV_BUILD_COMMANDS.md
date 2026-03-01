@@ -4,9 +4,9 @@
 The unified build script handles everything: build, sign, notarize, staple, and validate.
 
 ## Current Release Target
-- Version: `1.3.3`
-- Build: `102`
-- Scope: sound cue refresh + ESC/stop cue separation fix
+- Version: `1.3.4`
+- Build: `103`
+- Scope: recording indicator + Parakeet loader stability fix
 
 ## Prereqs (one-time)
 ```bash
@@ -29,14 +29,11 @@ export NOTARY_PROFILE="your-notary-profile"
 
 ### Unsigned Build (for local testing)
 ```bash
-# v2 - English only
-./build_notescribe.sh --model v2
-
 # v3 - Multilingual
 ./build_notescribe.sh --model v3
 
 # v2+v3 - Combined payload (larger download)
-./build_notescribe.sh --model both
+./build_notescribe.sh --model v2v3
 ```
 **Does:** Build only (no signing, no DMG, no notarization)
 
@@ -44,14 +41,11 @@ export NOTARY_PROFILE="your-notary-profile"
 
 ### Signed Build (creates DMG, no notarization)
 ```bash
-# v2
-SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model v2 --signed
-
 # v3
 SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model v3 --signed
 
 # v2+v3 combined
-SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model both --signed
+SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model v2v3 --signed
 ```
 **Does:** Build → Sign → Create DMG
 
@@ -59,17 +53,13 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" ./build_notescribe.sh --model both --signed
 
 ### Full Pipeline (build + sign + notarize + staple + validate)
 ```bash
-# v2 - Full pipeline
-SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
-  ./build_notescribe.sh --model v2 --signed
-
 # v3 - Full pipeline
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
   ./build_notescribe.sh --model v3 --signed
 
 # v2+v3 combined - Full pipeline
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
-  ./build_notescribe.sh --model both --signed
+  ./build_notescribe.sh --model v2v3 --signed
 ```
 **Does:** Build → Sign → Create DMG → Upload to Apple → Wait → Staple → Validate
 
@@ -86,8 +76,6 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 ---
 
 ## Output Locations
-- v2 app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2/NoteScribe.app`
-- v2 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg`
 - v3 app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3/NoteScribe.app`
 - v3 DMG: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg`
 - v2+v3 combined app: `/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3/NoteScribe.app`
@@ -98,12 +86,12 @@ SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1
 ## Manual Staple/Validate (if needed separately)
 ```bash
 # Staple
-xcrun stapler staple "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg"
 xcrun stapler staple "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
+xcrun stapler staple "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
 
 # Validate
-xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg"
 xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
+xcrun stapler validate "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
 ```
 
 ---
@@ -227,23 +215,23 @@ git push origin main
 
 # 1) Build/sign/notarize/staple/validate both release variants
 SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
-  ./build_notescribe.sh --model v2 --signed
-
-SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
   ./build_notescribe.sh --model v3 --signed
 
+SIGNING_IDENTITY="$SIGNING_IDENTITY" NOTARY_PROFILE="$NOTARY_PROFILE" NOTARIZE=1 \
+  ./build_notescribe.sh --model v2v3 --signed
+
 # 2) Gatekeeper checks on final DMGs
-spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2.dmg"
 spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v3.dmg"
+spctl -a -vv -t open "/Users/swaylen/dev/NoteScribe/_releases/NoteScribe-v2v3.dmg"
 ```
 
-### v1.3.3 Micro Release Notes
-- Updated bundled sounds for start/stop/paste/escape feedback.
-- Fixed unintended Escape cue during stop/finalize flow.
-- Removed Escape cue from notification error path.
-- Kept stop cue behavior deterministic during normal recording completion.
+### v1.3.4 Release Notes Summary
+- Added the floating recording indicator with timer and recording-state feedback.
+- Simplified packaged builds to `v3` and combined `v2v3`.
+- Fixed a crash caused by concurrent Parakeet model initialization during prewarm and transcription.
+- Kept the release pipeline rooted in the active `NoteScribe/` app tree.
 
-### Verified on Feb 16, 2026
+### Verified on March 1, 2026
 All of the following completed successfully on local machine:
 ```bash
 ./build_notescribe.sh --model v3 --unsigned
@@ -254,6 +242,10 @@ SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
 SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
 NOTARY_PROFILE="notescribe-notary" NOTARIZE=1 \
   ./build_notescribe.sh --model v3 --signed
+
+SIGNING_IDENTITY="Developer ID Application: Shane Wasley (LVKMA4S3V6)" \
+NOTARY_PROFILE="notescribe-notary" NOTARIZE=1 \
+  ./build_notescribe.sh --model v2v3 --signed
 ```
 
 DMG signing behavior:

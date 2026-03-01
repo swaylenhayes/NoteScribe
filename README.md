@@ -11,9 +11,9 @@ V3 is the default release. If you want in-app model switching between V2 and V3 
 
 ## Latest Release
 
-- **Version:** `v1.3.3` (February 18, 2026)
-- **Highlights:** refreshed start/stop/paste/escape sounds, a fix for unintended Escape cue playback during normal stop, and an added combined V2+V3 release artifact.
-- **Release notes:** `/Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.3.md`
+- **Version:** `v1.3.4` (March 1, 2026)
+- **Highlights:** added the floating recording indicator, simplified packaged downloads to `v3` and `v2v3`, and fixed a Parakeet model-loading crash during repeated recording/transcription flows.
+- **Release notes:** `/Users/swaylen/dev/NoteScribe/_docs/RELEASE_NOTES_v1.3.4.md`
 - **Downloads:** [GitHub Releases](https://github.com/swaylenhayes/NoteScribe/releases)
 
 ## Model performance (M-series optimized)
