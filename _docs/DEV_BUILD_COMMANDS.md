@@ -159,8 +159,7 @@ Related build behavior:
 ### Current release-package status
 - `./build_notescribe.sh --model v3 --unsigned` now succeeds end-to-end.
 - Export path confirmed: `$REPO_ROOT/_releases/NoteScribe-v3/NoteScribe.app`
-- Direct `xcodebuild` Release builds now pass for both:
-  - `$REPO_ROOT/base/NoteScribe.xcodeproj`
+- Direct `xcodebuild` Release builds now pass for:
   - `$REPO_ROOT/NoteScribe.xcodeproj`
 
 ### Direct Xcode Build Notes

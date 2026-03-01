@@ -9,7 +9,6 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 - Word replacements (dictionary) applied after transcription.
 - Output filtering for bracketed noise and filler words.
 - Optional text formatting (paragraph chunking).
-- Scratchpad tab for quick text capture.
 - VAD toggles for live and file transcription.
 - Import/export of settings and word replacements.
 
@@ -23,13 +22,13 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 - Swift packages: FluidAudio (ASR + VAD), KeyboardShortcuts
 
 ## Model assets
-- Parakeet Core ML bundles (v2 + v3) live under `NoteScribe/Resources/BundledModels/Parakeet/` in the v2/v3 worktrees.
+- Parakeet Core ML bundles (v2 + v3) live under `NoteScribe/Resources/BundledModels/Parakeet/`.
 - Silero VAD bundle under `NoteScribe/Resources/BundledModels/VAD/`.
 - Large model variants (v2-L, v3-L) are archived locally and not intended for GitHub.
 - Offline mode is used: model downloads are disabled and models are bundled.
 
 ## Repo organization (high level)
-- `base/`, `v2/`, `v3/` are full source trees with Xcode projects.
+- `NoteScribe/` and `NoteScribe.xcodeproj/` are the active tracked app source and project.
 - `_releases/` holds DMGs and notarized outputs.
 - `archive/` holds retired items: large models, legacy VAD upgrade folders, and DerivedData.
 - Active docs:
@@ -39,7 +38,7 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 
 ## Release state
 - Source repo is published on GitHub: https://github.com/swaylenhayes/NoteScribe
-- Current public release: **1.1** with v2 and v3 DMGs attached.
+- Current public release: **1.3.4** with `v3` and `v2v3` DMGs attached.
 
 ## History highlights
 - Fixed Xcode project parse errors and synced `Package.resolved` across worktrees.
@@ -51,5 +50,4 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 - Watch for first-run paste reliability on fresh installs; if it regresses, add a short initialization gate or visible “ready” state.
 
 ## Roadmap (short list)
-- Refactor to a single `base` source tree with external model assets injected at build time.
 - Create a filler-words edition as a separate branch (text filtering focus).

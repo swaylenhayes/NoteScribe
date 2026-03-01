@@ -6,6 +6,8 @@ _releases/
 archive/
 _branch-filler-words/
 .claude/
+base/
+docs/plans/
 
 # macOS
 .DS_Store
@@ -24,6 +26,9 @@ NoteScribe.xcodeproj/xcuserdata/
 
 # Build artifacts (releases are managed separately)
 *.dmg
+
+/Keeter
+Keeter
 
 # Archived model references (no longer used)
 nvidia_parakeet-v2-L/

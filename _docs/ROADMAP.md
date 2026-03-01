@@ -18,7 +18,7 @@ Last updated: Mar 1, 2026
   - FluidAudio universal compile compatibility patch path
 
 ## Pending verification
-- Recording indicator manual hardware check on a real microphone/display setup. See `docs/plans/2026-03-01-recording-indicator-implementation-v2.md`.
+- Recording indicator manual hardware check on a real microphone/display setup.
 
 ## Near-term remaining
 - **Multi-monitor recording indicator**: follow-active-screen for the recording pill if primary-only proves insufficient.

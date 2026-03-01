@@ -41,7 +41,7 @@ Internal improvement: Consolidated from multiple source trees to a single codeba
 - More resilient offline audio processing during transcription
 
 ### Internal Improvements
-- Single source tree architecture (`base/`)
+- Single source tree architecture
 - Unified build script with `--model v2|v3` parameter
 - Models stored externally and injected at build time
 

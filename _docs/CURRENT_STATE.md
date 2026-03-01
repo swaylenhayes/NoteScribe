@@ -21,7 +21,7 @@ Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the cu
 - Three pill states: normal recording (red pulse), no-audio warning (amber static), escape cancel pending (red fast pulse).
 - Root-tree implementation is complete and builds successfully in `NoteScribe.xcodeproj`.
 - Existing bottom-screen recording toasts are replaced by pill state changes during recording.
-- Human hardware/manual verification is still pending. Use `docs/plans/2026-03-01-recording-indicator-implementation-v2.md` for the checklist.
+- Human hardware/manual verification is still pending. Keep any detailed verification checklist in local private notes rather than tracked repo docs.
 
 ## UI state (latest polish pass)
 - Top tab bar now uses: `Transcription`, `Replacements`, `Settings`.

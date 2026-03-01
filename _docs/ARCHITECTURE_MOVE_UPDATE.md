@@ -1,8 +1,8 @@
 # Architecture Move Update (High-Level)
 
-This note summarizes the current `base` / `v2` / `v3` structure and a future layout that separates source from model assets.
+This note summarizes the historical `base` / `v2` / `v3` structure and the later root-tree consolidation that replaced it.
 
-## Current layout (today)
+## Historical layout (before root consolidation)
 
 ### base
 base/
@@ -161,7 +161,14 @@ Notes:
   - `parakeet-tdt-0.6b-v3-coreml/`: full CoreML bundle (contains *.mlmodelc)
 - `NoteScribe/Resources/BundledModels/VAD/` matches base.
 
-Relationship summary: `base` is the shared source. `v2` and `v3` mirror the same source tree and differ primarily in the bundled Parakeet assets.
+Relationship summary: `base` was the shared source. `v2` and `v3` mirrored the same source tree and differed primarily in the bundled Parakeet assets.
+
+## Current layout
+
+- `NoteScribe/` is the active tracked app source tree.
+- `NoteScribe.xcodeproj/` is the active tracked Xcode project.
+- `models/` remains local-only and is injected at build time.
+- `base/` is now local-only legacy material and is not part of the synced repository.
 
 ## Future layout (proposed)
 Goal: keep source code in one place and keep model assets in a separate directory, then bundle the chosen model at build time.
@@ -184,7 +191,7 @@ NoteScribe/
 ```
 
 ### Proposed branching model (high-level)
-- `main` (base source of truth)
+- `main` (root source of truth)
 - `filler-words` (branch for filler-word edition)
 - optional release branches/tags for v2/v3 builds
 

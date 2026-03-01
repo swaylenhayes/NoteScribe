@@ -12,9 +12,8 @@
 ## Repository Structure
 ```
 NoteScribe/
-├── NoteScribe/        # Active local app source tree
-├── NoteScribe.xcodeproj/  # Active local Xcode project
-├── base/              # Release/build-script source tree (still used by build_notescribe.sh)
+├── NoteScribe/        # Active app source tree
+├── NoteScribe.xcodeproj/  # Active Xcode project
 ├── models/            # External model storage (NOT in git)
 │   ├── parakeet-v2/  # ~443MB - English only
 │   ├── parakeet-v3/  # ~461MB - Multilingual
@@ -39,9 +38,9 @@ NoteScribe/
 - **VAD**: `models/vad/silero-vad-coreml/` (~1MB, Voice Activity Detection)
 
 ### Build-Time Model Injection
-- Models are copied from `models/` to `base/NoteScribe/Resources/BundledModels/` at build time
+- Models are copied from `models/` to `NoteScribe/Resources/BundledModels/` at build time
 - After build completes, models are cleaned from source tree
-- `base/` stays pristine with no large model files
+- The tracked source tree stays free of committed model payloads
 
 ### Archived Items (DO NOT USE)
 - `archive/v2-worktree-archived/` - Old v2 worktree
@@ -281,12 +280,12 @@ This repository is actively managed across two Claude interfaces:
 
 ### Model Locations
 - **External**: `models/parakeet-v2/`, `models/parakeet-v3/`, `models/vad/`
-- **At build time**: Copied to `base/NoteScribe/Resources/BundledModels/`
+- **At build time**: Copied to `NoteScribe/Resources/BundledModels/`
 - **After build**: Cleaned from source tree automatically
 
 ### Build Artifacts
 - **Local dev source**: `NoteScribe/` with `NoteScribe.xcodeproj`
-- **Release script source**: `base/` via `build_notescribe.sh`
+- **Release script source**: root `NoteScribe/` tree via `build_notescribe.sh`
 - **Releases**: `_releases/NoteScribe-v2.dmg`, `_releases/NoteScribe-v3.dmg`
 - **Archive**: `archive/` (retired worktrees, don't touch)
 
