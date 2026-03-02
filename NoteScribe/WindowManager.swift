@@ -4,8 +4,8 @@ import AppKit
 class WindowManager: NSObject {
     static let shared = WindowManager()
     
-    private static let mainWindowIdentifier = NSUserInterfaceItemIdentifier("com.swaylenhayes.apps.notescribe.mainWindow")
-    private static let onboardingWindowIdentifier = NSUserInterfaceItemIdentifier("com.swaylenhayes.apps.notescribe.onboardingWindow")
+    private static let mainWindowIdentifier = NSUserInterfaceItemIdentifier(AppIdentity.mainWindowIdentifier)
+    private static let onboardingWindowIdentifier = NSUserInterfaceItemIdentifier(AppIdentity.onboardingWindowIdentifier)
     private static let mainWindowAutosaveName = NSWindow.FrameAutosaveName("NoteScribeMainWindowFrame")
     private static let defaultMainWindowWidth: CGFloat = 650
     

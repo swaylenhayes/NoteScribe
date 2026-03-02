@@ -13,6 +13,9 @@ Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the cu
 - App Sandbox is disabled for local Debug/Release builds in this repo to prevent external model copy failures.
 - Current local development authority is the root `NoteScribe/` tree plus root `NoteScribe.xcodeproj`.
   - `build_notescribe.sh` now targets the root tree for release packaging.
+- The tracked app bundle identifier is now `com.swaylenserves.notescribe`.
+  - Startup now migrates legacy `com.swaylenhayes.apps.notescribe` defaults and Application Support data before SwiftData initialization.
+  - Legacy custom sounds stored under `Application Support/notescribe/CustomSounds` are also migrated forward when no destination conflict exists.
 
 ## Repo privacy + sync policy
 - `base/` is local-only legacy material and is no longer tracked or synced.

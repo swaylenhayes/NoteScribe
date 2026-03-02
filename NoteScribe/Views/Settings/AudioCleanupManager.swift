@@ -7,7 +7,7 @@ import OSLog
 class AudioCleanupManager {
     static let shared = AudioCleanupManager()
     
-    private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "AudioCleanupManager")
+    private let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "AudioCleanupManager")
     private var cleanupTimer: Timer?
     private var cleanupContext: ModelContext?
     

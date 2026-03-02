@@ -104,6 +104,8 @@
 		A5679A55F846AEDD61870A4C /* Common/View+Placeholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5679A55F846AEDD61870A4B /* Common/View+Placeholder.swift */; };
 		B0D39A1B2F11111100000002 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D39A1B2F11111100000001 /* PermissionManager.swift */; };
 		C876805DC9AE4EDE85EB29C6 /* TranscriptionState+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F15E2385FA4BACA1AE82AF /* TranscriptionState+UI.swift */; };
+		D1A100000000000000000001 /* AppIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A100000000000000000002 /* AppIdentity.swift */; };
+		D1A100000000000000000003 /* AppDataMigrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1A100000000000000000004 /* AppDataMigrationService.swift */; };
 		E11BBA4E2E5DC555000AB839 /* FluidAudio in Frameworks */ = {isa = PBXBuildFile; productRef = E11BBA4D2E5DC555000AB839 /* FluidAudio */; };
 		E1342C1F2EB4844800CED8A2 /* Atomics in Frameworks */ = {isa = PBXBuildFile; productRef = E1342C1E2EB4844800CED8A2 /* Atomics */; };
 		E1A261122CC143AC00B233D1 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = E1A261112CC143AC00B233D1 /* KeyboardShortcuts */; };
@@ -243,6 +245,8 @@
 		B0D39A1B2F11111100000001 /* PermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionManager.swift; sourceTree = "<group>"; };
 		CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelInitializationService.swift; sourceTree = "<group>"; };
 		B0D39A1B2F22222200000002 /* ModelBundleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelBundleManager.swift; sourceTree = "<group>"; };
+		D1A100000000000000000002 /* AppIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIdentity.swift; sourceTree = "<group>"; };
+		D1A100000000000000000004 /* AppDataMigrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataMigrationService.swift; sourceTree = "<group>"; };
 		E11473B02CBE0F0A00318EE4 /* NoteScribe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoteScribe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11473C32CBE0F0B00318EE4 /* NoteScribeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoteScribeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11473CD2CBE0F0B00318EE4 /* NoteScribeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoteScribeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -337,6 +341,7 @@
 		2752661A2EE2996E007CA86C /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				D1A100000000000000000004 /* AppDataMigrationService.swift */,
 				CA119C8A60BC4A9CB4D9F10C /* ModelInitializationService.swift */,
 				B0D39A1B2F22222200000002 /* ModelBundleManager.swift */,
 				275265FF2EE2996E007CA86C /* AudioDeviceConfiguration.swift */,
@@ -478,6 +483,7 @@
 				2752661A2EE2996E007CA86C /* Services */,
 				275266662EE2996E007CA86C /* Views */,
 				275266732EE2996E007CA86C /* Transcription */,
+				D1A100000000000000000002 /* AppIdentity.swift */,
 				275266742EE2996E007CA86C /* AppDelegate.swift */,
 				275266752EE2996E007CA86C /* Assets.xcassets */,
 				275266762EE2996E007CA86C /* ClipboardManager.swift */,
@@ -775,6 +781,8 @@
 				B0D39A1B2F11111100000002 /* PermissionManager.swift in Sources */,
 				2BAA90C1C871A90588961825 /* DictionaryItem.swift in Sources */,
 				C876805DC9AE4EDE85EB29C6 /* TranscriptionState+UI.swift in Sources */,
+				D1A100000000000000000001 /* AppIdentity.swift in Sources */,
+				D1A100000000000000000003 /* AppDataMigrationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -973,7 +981,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.notescribe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ENABLE_NATIVE_SPEECH_ANALYZER $(inherited)";
@@ -1021,7 +1029,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.notescribe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "ENABLE_NATIVE_SPEECH_ANALYZER $(inherited)";
@@ -1040,7 +1048,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1058,7 +1066,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1075,7 +1083,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1092,7 +1100,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.3.4;
-				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenhayes.apps.NoteScribeUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.swaylenserves.notescribe.uitests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;

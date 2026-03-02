@@ -15,7 +15,7 @@ class AudioTranscriptionManager: ObservableObject {
     
     private var currentTask: Task<Void, Error>?
     private let audioProcessor = AudioProcessor()
-    private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "AudioTranscriptionManager")
+    private let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "AudioTranscriptionManager")
     
     // v1.2: Only Parakeet service
     private var parakeetTranscriptionService: ParakeetTranscriptionService?
@@ -76,9 +76,7 @@ class AudioTranscriptionManager: ObservableObject {
                 let duration = CMTimeGetSeconds(try await audioAsset.load(.duration))
                 
                 // Create permanent copy of the audio file
-                let recordingsDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                    .appendingPathComponent("com.swaylenhayes.apps.notescribe")
-                    .appendingPathComponent("Recordings")
+                let recordingsDirectory = AppIdentity.recordingsDirectoryURL
                 
                 let fileName = "transcribed_\(UUID().uuidString).wav"
                 let permanentURL = recordingsDirectory.appendingPathComponent(fileName)

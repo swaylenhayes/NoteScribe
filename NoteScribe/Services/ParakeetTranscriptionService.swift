@@ -10,7 +10,7 @@ actor ParakeetTranscriptionService: TranscriptionService {
     private var vadManager: VadManager?
     private var vadLoadTask: Task<Void, Error>?
     private var activeVersion: AsrModelVersion?
-    private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe.parakeet", category: "ParakeetTranscriptionService")
+    private let logger = Logger(subsystem: AppIdentity.parakeetLoggerSubsystem, category: "ParakeetTranscriptionService")
 
     private func version(for model: any TranscriptionModel) -> AsrModelVersion {
         model.name.lowercased().contains("v2") ? .v2 : .v3

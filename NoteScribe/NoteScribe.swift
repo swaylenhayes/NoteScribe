@@ -24,8 +24,10 @@ struct NoteScribeApp: App {
     private let transcriptionAutoCleanupService = TranscriptionAutoCleanupService.shared
     
     init() {
+        AppDataMigrationService.migrateIfNeeded()
+
         // Configure FluidAudio logging subsystem
-        AppLogger.defaultSubsystem = "com.swaylenhayes.apps.notescribe.parakeet"
+        AppLogger.defaultSubsystem = AppIdentity.parakeetLoggerSubsystem
         UserDefaults.standard.register(defaults: [
             "preserveTranscriptInClipboard": true,
             "isSystemMuteEnabled": true
@@ -33,7 +35,7 @@ struct NoteScribeApp: App {
 
         // OFFLINE MODE: Removed PowerMode initialization
 
-        let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "Initialization")
+        let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "Initialization")
         let schema = Schema([Transcription.self])
         var initializationFailed = false
         
@@ -118,8 +120,7 @@ struct NoteScribeApp: App {
     private static func createPersistentContainer(schema: Schema, logger: Logger) -> ModelContainer? {
         do {
             // Create app-specific Application Support directory URL
-            let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("com.swaylenhayes.apps.notescribe", isDirectory: true)
+            let appSupportURL = AppIdentity.currentAppSupportURL
             
             // Create the directory if it doesn't exist
             try? FileManager.default.createDirectory(at: appSupportURL, withIntermediateDirectories: true)

@@ -5,7 +5,7 @@ import CoreML
 /// Loads the bundled Silero CoreML VAD model so FluidAudio can run offline.
 class VADModelManager {
     static let shared = VADModelManager()
-    private let logger = Logger(subsystem: "VADModelManager", category: "ModelManagement")
+    private let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "VADModelManager")
     private let fileManager = FileManager.default
 
     private init() {}

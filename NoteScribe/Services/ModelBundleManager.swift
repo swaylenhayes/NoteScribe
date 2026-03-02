@@ -7,7 +7,7 @@ import os
 /// This manager is idempotent: it checks if all required files exist in the cache
 /// before every load attempt, and re-copies from the bundle if anything is missing.
 enum ModelBundleManager {
-    private static let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "ModelBundleManager")
+    private static let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "ModelBundleManager")
     private static let fileManager = FileManager.default
     private typealias NamedModelDirectory = (name: String, url: URL)
 

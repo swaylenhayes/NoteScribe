@@ -11,7 +11,7 @@ class AudioTranscriptionService: ObservableObject {
 
     private let modelContext: ModelContext
     private let transcriptionState: TranscriptionState
-    private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "AudioTranscriptionService")
+    private let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "AudioTranscriptionService")
     
     // v1.2: Only Parakeet transcription service
     private lazy var parakeetTranscriptionService = ParakeetTranscriptionService()
@@ -63,9 +63,8 @@ class AudioTranscriptionService: ObservableObject {
             let duration = CMTimeGetSeconds(try await audioAsset.load(.duration))
             
             // Create a permanent copy of the audio file
-            let recordingsDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-                .appendingPathComponent("com.swaylenhayes.apps.notescribe")
-                .appendingPathComponent("Recordings")
+            let recordingsDirectory = AppIdentity.recordingsDirectoryURL
+            try FileManager.default.createDirectory(at: recordingsDirectory, withIntermediateDirectories: true)
             
             let fileName = "retranscribed_\(UUID().uuidString).wav"
             let permanentURL = recordingsDirectory.appendingPathComponent(fileName)

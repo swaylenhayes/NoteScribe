@@ -4,7 +4,7 @@ import CoreAudio
 import os
 
 class AudioDeviceConfiguration {
-    private static let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "AudioDeviceConfiguration")
+    private static let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "AudioDeviceConfiguration")
     
 
 

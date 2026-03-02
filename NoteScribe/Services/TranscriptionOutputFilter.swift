@@ -2,7 +2,7 @@ import Foundation
 import os
 
 struct TranscriptionOutputFilter {
-    private static let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "TranscriptionOutputFilter")
+    private static let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "TranscriptionOutputFilter")
     
     private static let hallucinationPatterns = [
         #"\[.*?\]"#,     // []

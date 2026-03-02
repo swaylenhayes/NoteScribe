@@ -64,7 +64,7 @@ class TranscriptionState: NSObject, ObservableObject {
     let bundledModelsDirectory: URL? // OFFLINE MODE: Check bundle first
     let recordingsDirectory: URL
     // OFFLINE MODE: Removed enhancementService property
-    let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "TranscriptionState")
+    let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "TranscriptionState")
 
     // For model progress tracking
     @Published var downloadProgress: [String: Double] = [:]
@@ -73,11 +73,10 @@ class TranscriptionState: NSObject, ObservableObject {
     init(modelContext: ModelContext) {
         self.transcriptionPrompt = TranscriptionPrompt()
         self.modelContext = modelContext
-        let appSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("com.swaylenhayes.apps.notescribe")
+        let appSupportDirectory = AppIdentity.currentAppSupportURL
 
         self.modelsDirectory = appSupportDirectory.appendingPathComponent("Models")
-        self.recordingsDirectory = appSupportDirectory.appendingPathComponent("Recordings")
+        self.recordingsDirectory = AppIdentity.recordingsDirectoryURL
 
         // Models are copied from bundle to FluidAudio cache on demand
         // See ModelBundleManager

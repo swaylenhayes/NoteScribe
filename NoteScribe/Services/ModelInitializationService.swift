@@ -3,15 +3,10 @@ import os.log
 
 /// Service responsible for initializing bundled models on first app launch
 class ModelInitializationService {
-    private let logger = Logger(subsystem: "com.swaylenhayes.apps.notescribe", category: "ModelInitialization")
+    private let logger = Logger(subsystem: AppIdentity.loggerSubsystem, category: "ModelInitialization")
     private let fileManager = FileManager.default
 
     // MARK: - Directories
-
-    private var appSupportDirectory: URL {
-        fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("com.swaylenhayes.apps.notescribe")
-    }
 
     private var fluidAudioDirectory: URL {
         fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]

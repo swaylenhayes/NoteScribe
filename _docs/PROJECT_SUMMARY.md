@@ -41,6 +41,7 @@ NoteScribe is a macOS menu bar app for fast voice and file transcription. It run
 ## Release state
 - Source repo is published on GitHub: https://github.com/swaylenhayes/NoteScribe
 - Current public release: **1.3.4** with `v3` and `v2v3` DMGs attached.
+- Current tracked app identity now targets bundle ID `com.swaylenserves.notescribe` and includes migration logic for legacy `com.swaylenhayes.apps.notescribe` user data.
 
 ## History highlights
 - Fixed Xcode project parse errors and synced `Package.resolved` across worktrees.
