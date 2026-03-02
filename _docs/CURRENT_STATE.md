@@ -16,6 +16,7 @@ Path convention: use `$REPO_ROOT` for the repository root and `$HOME` for the cu
 - The tracked app bundle identifier is now `com.swaylenserves.notescribe`.
   - Startup now migrates legacy `com.swaylenhayes.apps.notescribe` defaults and Application Support data before SwiftData initialization.
   - Legacy custom sounds stored under `Application Support/notescribe/CustomSounds` are also migrated forward when no destination conflict exists.
+- Release-in-prep is `v1.3.5`, which also changes the bundled uninstall helper to preserve user-created data by default unless `--remove-user-data` is passed.
 
 ## Repo privacy + sync policy
 - `base/` is local-only legacy material and is no longer tracked or synced.

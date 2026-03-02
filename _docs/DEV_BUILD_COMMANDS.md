@@ -9,9 +9,9 @@ The unified build script handles everything: build, sign, notarize, staple, and 
 - Do not commit machine-specific absolute paths like `/Users/<name>/...`.
 
 ## Current Release Target
-- Version: `1.3.4`
-- Build: `103`
-- Scope: recording indicator + Parakeet loader stability fix
+- Version: `1.3.5`
+- Build: `104`
+- Scope: bundle identifier migration + safer uninstall default
 
 ## Prereqs (one-time)
 ```bash
@@ -230,11 +230,10 @@ spctl -a -vv -t open "$REPO_ROOT/_releases/NoteScribe-v3.dmg"
 spctl -a -vv -t open "$REPO_ROOT/_releases/NoteScribe-v2v3.dmg"
 ```
 
-### v1.3.4 Release Notes Summary
-- Added the floating recording indicator with timer and recording-state feedback.
-- Simplified packaged builds to `v3` and combined `v2v3`.
-- Fixed a crash caused by concurrent Parakeet model initialization during prewarm and transcription.
-- Kept the release pipeline rooted in the active `NoteScribe/` app tree.
+### v1.3.5 Release Notes Summary
+- Migrated the app to the `com.swaylenserves.notescribe` bundle identifier with automatic migration of existing local app data.
+- Preserved transcripts, recordings, and custom sounds during upgrades and changed the uninstall helper to preserve user data by default.
+- Kept the release pipeline rooted in the active `NoteScribe/` app tree with the `v3` and combined `v2v3` DMGs.
 
 ### Verified on March 1, 2026
 All of the following completed successfully on local machine:

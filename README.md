@@ -11,9 +11,9 @@ V3 is the default release. If you want in-app model switching between V2 and V3 
 
 ## Latest Release
 
-- **Version:** `v1.3.4` (March 1, 2026)
-- **Highlights:** added the floating recording indicator, simplified packaged downloads to `v3` and `v2v3`, and fixed a Parakeet model-loading crash during repeated recording/transcription flows.
-- **Release notes:** `_docs/RELEASE_NOTES_v1.3.4.md`
+- **Version:** `v1.3.5` (March 1, 2026)
+- **Highlights:** migrated the app to its new bundle identifier with forward migration for existing local data, and changed the uninstall helper to preserve user-created data by default.
+- **Release notes:** `_docs/RELEASE_NOTES_v1.3.5.md`
 - **Downloads:** [GitHub Releases](https://github.com/swaylenhayes/NoteScribe/releases)
 
 ## Model performance (M-series optimized)
