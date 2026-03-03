@@ -46,3 +46,7 @@ base/NoteScribe/Resources/BundledModels/VAD/**/*.mlmodelc/
 *.bak
 *.swp
 *~
+
+# Environment variables
+.env
+.env.*
