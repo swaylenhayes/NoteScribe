@@ -1,5 +1,9 @@
 # NoteScribe - Claude Code Configuration
 
+## Git Attribution
+
+**Do not add `Co-Authored-By` trailers, AI attribution, or any Claude/Anthropic references to commit messages, code comments, or documentation.** All commits are authored by the developer. No exceptions.
+
 ## Project Overview
 **NoteScribe** is a macOS menu bar app for fast voice and file transcription using local CoreML models (Parakeet TDT). It captures audio via hotkeys, transcribes fully offline, and intelligently pastes results into foreground apps.
 
@@ -26,13 +30,13 @@ NoteScribe/
 ├── uninstall_notescribe.sh  # Clean uninstall helper
 ├── CURRENT_STATE.md   # Project status (KEEP UPDATED)
 ├── DEV_BUILD_COMMANDS.md    # Build process reference
-└── _docs/RELEASE_NOTES_v1.3.4.md    # Current release notes
+└── __docs/RELEASE_NOTES_v1.3.4.md    # Current release notes
 ```
 
 ## Repo Privacy Rules
 - `NoteScribe/` + `NoteScribe.xcodeproj/` are the only tracked active source-of-truth app paths.
 - `base/` is local-only legacy material and must stay out of the synced repo.
-- `docs/plans/` is local-only and must stay out of the synced repo.
+- `_docs/plans/` is local-only and must stay out of the synced repo.
 - Do not commit user-specific filesystem paths, usernames, or machine-local examples.
 - If sensitive docs are accidentally pushed, remove them from tracked history rather than only deleting them in a follow-up commit.
 
