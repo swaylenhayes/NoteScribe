@@ -50,3 +50,13 @@ base/NoteScribe/Resources/BundledModels/VAD/**/*.mlmodelc/
 # Environment variables
 .env
 .env.*
+
+# Internal docs (not for public repos)
+_docs/
+_private/
+
+# Agent runtime config files
+CLAUDE.md
+CODEX.md
+GEMINI.md
+AGENTS.md
